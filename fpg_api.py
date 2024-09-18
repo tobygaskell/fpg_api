@@ -2,7 +2,7 @@ from flask import Flask, request
 import get_score as gs
 import random
 import utils
-
+import init_player as p_init
 app = Flask(__name__)
 
 @app.route('/get_score', methods=['POST'])
@@ -114,12 +114,12 @@ def make_choice():
     round  = request_data['Round']
 
     query = '''
-            INSERT INTO choices
+            INSERT INTO CHOICES
+            (PLAYER_ID, TEAM_CHOICE, ROUND, FIXTURE_ID)
             values
-            ({}, '{}', '{}');
-            '''.format(round, choice, player)
+            ({}, '{}', {}, {});
+            '''.format(player, choice, round, 10)
     
-
     utils.run_sql_query(query, True)
 
     return {'Submitted': True, 
@@ -130,7 +130,7 @@ def get_choice():
     '''
     '''
     query = '''
-            select * from choices
+            select * from CHOICE
             '''
     
     data = utils.run_sql_query(query)
@@ -154,8 +154,8 @@ def init_round():
         doubled = random.randrange(100) < 10
 
         query = '''
-                INSERT INTO round_info
-                (round, doubled, dmm)
+                INSERT INTO ROUNDS
+                (ROUND, DP_ROUND, DMM_ROUND)
                 values
                 ({}, {}, {});
                 '''.format(round, doubled, dmm)
@@ -174,5 +174,19 @@ def init_round():
             'Message'     : message}
 
 
+@app.route('/init_player', methods = ['POST'])
+def init_player(): 
+    '''
+    '''
+    request_data = request.get_json()
+
+    email = request_data['Email']
+
+    player_id = p_init.check_if_player(email)
+
+    print(player_id)
+
+    return {'player_id': int(player_id)}
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
