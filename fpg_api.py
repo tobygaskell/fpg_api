@@ -1,8 +1,15 @@
 from flask import Flask, request
-import get_score as gs
-import random
-import utils
-import init_player as p_init
+
+import Players 
+import Round 
+import Results 
+import Scores 
+import Engine
+import Choices
+import Games
+import Fixtures
+import Teams
+
 app = Flask(__name__)
 
 @app.route('/get_score', methods=['POST'])
@@ -18,11 +25,11 @@ def get_score():
     dmm = request_data['DMM']
     doubled = request_data['Doubled']
 
-    score, basic_score, h2h_score, derby_score, dmm_score, subtotal = gs.main(result, 
-                                                                              h2h, 
-                                                                              derby, 
-                                                                              dmm, 
-                                                                              doubled)
+    score, basic_score, h2h_score, derby_score, dmm_score, subtotal = Scores.get_score(result, 
+                                                                                       h2h, 
+                                                                                       derby, 
+                                                                                       dmm, 
+                                                                                       doubled)
 
     return {'Player'     : player,
             'Score'      : score, 
@@ -39,43 +46,24 @@ def get_result():
     request_data = request.get_json()
 
     player = request_data['Player']
-    team = request_data['Choice']
-    round = request_data['Round']
+    choice = request_data['Choice']
+    round_id = request_data['Round']
 
-    result = random.choice(['Win', 'Lose', 'Draw'])
+    fixture_id, h2h, derby = Games.get_game_info(choice, round_id)
 
-    teams = get_teams()['Teams']
-
-    oppo = random.choice(teams)
-
-    if result == 'Win': 
-        score = '2-1'
-    
-    elif result == 'Draw': 
-        score = '1-1'
-
-    elif result == 'Lose': 
-        score = '0-3'
-
-    venue = random.choice(['Home', 'Away'])
-
-    h2h = random.choice([True, False])
-
-    derby = random.choice([True, False])
+    result = Results.get_result(choice, fixture_id)
 
     return {'Player'   : player, 
             'Result'   : result, 
-            'Choice'   : team, 
-            'Round'    : round, 
-            'Opponent' : oppo, 
-            'Score'    : score, 
-            'Venue'    : venue, 
+            'Choice'   : choice, 
+            'Round'    : round_id, 
             'H2H'      : h2h, 
             'Derby'    : derby}
 
 @app.route('/get_teams', methods = ['GET'])
 def get_teams(): 
     '''
+    TODO: Write Functionality
     '''
     return {'Teams' : ['Team {}'.format(i+1) for i in range(20)]}
 
@@ -87,17 +75,7 @@ def get_round_info():
 
     round = request_data['Round']
 
-    query = '''
-            SELECT doubled, dmm
-            FROM round_info
-            WHERE round = {}
-            LIMIT 1
-            '''.format(round)
-    
-    data = utils.run_sql_query(query)
-
-    doubled = bool(data['doubled'][0])
-    dmm = bool(data['dmm'][0])
+    doubled, dmm = Round.get_round_info(round)
 
     return {'Round'  : round, 
             'Double' : doubled, 
@@ -113,32 +91,21 @@ def make_choice():
     player = request_data['Player']
     round  = request_data['Round']
 
-    query = '''
-            INSERT INTO CHOICES
-            (PLAYER_ID, TEAM_CHOICE, ROUND, FIXTURE_ID)
-            values
-            ({}, '{}', {}, {});
-            '''.format(player, choice, round, 10)
-    
-    utils.run_sql_query(query, True)
+    submitted = Choices.make_choice(player, choice, round)
 
-    return {'Submitted': True, 
-            'query': query}
+    return {'Submitted': submitted}
 
-@app.route('/get_choices', methods = ['GET'])
-def get_choice(): 
+@app.route('/get_choices', methods = ['POST'])
+def get_choices(): 
     '''
     '''
-    query = '''
-            select * from CHOICE
-            '''
-    
-    data = utils.run_sql_query(query)
+    request_data = request.get_json()
 
-    print(data)
+    round_id = request_data['Round']
+
+    data = Choices.get_choices(round_id)
 
     return {'data': data.to_json()}
-
 
 @app.route('/init_round', methods = ['POST'])
 def init_round(): 
@@ -146,33 +113,19 @@ def init_round():
     '''
     request_data = request.get_json()
 
-    round = request_data['Round']
+    round_id = request_data['Round']
 
-    if round > 0 and round < 38:
+    init = Round.init_round(round_id)
 
-        dmm = random.randrange(100) < 10
-        doubled = random.randrange(100) < 10
-
-        query = '''
-                INSERT INTO ROUNDS
-                (ROUND, DP_ROUND, DMM_ROUND)
-                values
-                ({}, {}, {});
-                '''.format(round, doubled, dmm)
-        
-        utils.run_sql_query(query, True)
-
-        init = True
-        message = 'Round {} info saved'.format(round)
+    if init:
+        message = 'Round {} info saved'.format(round_id)
 
     else:
-        init = False
         message = 'Round out of Scope'
         
     return {'Initialized' : init,
-            'Round'       : round, 
-            'Message'     : message}
-
+            'Round'       : round_id, 
+            'Message'     : message} 
 
 @app.route('/init_player', methods = ['POST'])
 def init_player(): 
@@ -182,11 +135,63 @@ def init_player():
 
     email = request_data['Email']
 
-    player_id = p_init.check_if_player(email)
-
-    print(player_id)
+    player_id = Players.init_player(email)
 
     return {'player_id': int(player_id)}
 
+@app.route('/get_logo', methods = ['POST'])
+def get_logo(): 
+    '''
+    '''
+    request_data = request.get_json()
+
+    team = request_data['Team']
+
+    return {'Logo': Teams.get_logo(team)}
+
+@app.route('/engine', methods = ['GET'])
+def engine(): 
+    '''
+    '''
+    Engine.main()
+
+    return {'Everyday Ran' : True}
+
+@app.route('/init_results', methods = ['POST'])
+def init_results(): 
+    '''
+    '''
+    request_data = request.get_json()
+
+    round = request_data['Round']
+
+    saved = Results.init_results(round)
+
+    return {'Saved': saved}
+
+@app.route('/get_fixtures', methods=['POST'])
+def get_fixtures(): 
+    '''
+    '''
+    request_data = request.get_json()
+    round_id = request_data['Round']
+    return Fixtures.get_fixtures(round_id)
+
+@app.route('/get_available_choices', methods=['POST'])
+def get_available_choices():
+    '''
+    '''
+    request_data = request.get_json()
+    player_id = request_data['Player']
+    return Choices.get_available_choices(player_id)
+
+@app.route('/current_round', methods=['GET'])
+def get_current_round(): 
+    '''
+    '''
+    round_id = Round.get_current_round()
+    return {'Round ID' : round_id}
+
 if __name__ == '__main__':
+    # app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)
