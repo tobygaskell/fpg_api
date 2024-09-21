@@ -65,7 +65,8 @@ def get_current_round():
                              "season":"2024", 
                              "current":"true"})['response'][0][-2:].strip()
     
-    return round_id
+
+    return int(round_id)
 
 def round_changed(round_id): 
     '''

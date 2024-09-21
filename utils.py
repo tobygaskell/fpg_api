@@ -48,7 +48,6 @@ def get_api(url, querystring = {}):
         "X-RapidAPI-Key": os.environ.get('api_key'),
         "X-RapidAPI-Host": os.environ.get('api_host')
     }
-    print(headers)
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     return response.json()
