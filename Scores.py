@@ -113,7 +113,7 @@ def calculate_scores(round_id):
     '''
     TODO: Test
     '''
-    doubled, dmm = Round.get_round_info(round_id)
+    doubled, dmm, _ = Round.get_round_info(round_id)
     choices = Choices.get_choices(round_id)
 
     for player, choice in choices.items():

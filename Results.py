@@ -72,3 +72,19 @@ def get_result(choice, fixture_id):
         result = None
 
     return result
+
+
+def get_standings(): 
+    '''
+    '''
+    query = '''
+            SELECT F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
+            FROM SCORES AS F
+            INNER JOIN PLAYERS AS P 
+            ON F.PLAYER_ID = P.PLAYER_ID
+            GROUP BY player_id 
+            ORDER BY sum(total) desc;
+            '''
+    data = utils.run_sql_query(query)
+
+    return data.to_json(orient='records')
