@@ -10,13 +10,13 @@ def get_fixtures(round_id):
             FROM (
 
             (SELECT * 
-            FROM FPG.FIXTURES 
+            FROM FIXTURES 
             WHERE ROUND = {}) AS F
 
             LEFT JOIN 
 
             (SELECT TEAM_NAME, LOGO AS HOME_LOGO 
-            FROM FPG.TEAMS) as HOME 
+            FROM TEAMS) as HOME 
             
             ON F.HOME_TEAM = HOME.TEAM_NAME 
 
@@ -24,7 +24,7 @@ def get_fixtures(round_id):
 
             (SELECT TEAM_NAME, LOGO AS AWAY_LOGO
 
-            FROM FPG.TEAMS ) AS AWAY
+            FROM TEAMS ) AS AWAY
 
             ON F.AWAY_TEAM = AWAY.TEAM_NAME );
             '''.format(round_id)

@@ -44,7 +44,7 @@ def get_round_info(round_id):
     '''
     '''
     query = '''
-            SELECT DP_ROUND, DMM_ROUND
+            SELECT DP_ROUND, DMM_ROUND, CUT_OFF
             FROM ROUNDS
             WHERE ROUND = {}
             LIMIT 1
@@ -54,8 +54,9 @@ def get_round_info(round_id):
 
     doubled = bool(data['DP_ROUND'][0])
     dmm = bool(data['DMM_ROUND'][0])
+    cut_off = data['CUT_OFF'][0]
 
-    return doubled, dmm
+    return doubled, dmm, cut_off 
 
 def get_current_round(): 
     '''

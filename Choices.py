@@ -1,5 +1,7 @@
 import pandas as pd
 import utils
+import Round
+from datetime import datetime
 
 def get_choices(round_id):
     '''
@@ -17,30 +19,54 @@ def get_choices(round_id):
 
     return choices_dict
 
-def make_choice(player, choice, round):
+def make_choice(player, choice, round_id):
     '''
     TODO: Test
     '''
-    query = '''
-            INSERT INTO CHOICES
-            (PLAYER_ID, TEAM_CHOICE, ROUND)
-            values
-            ({}, '{}', {});
-            '''.format(player, choice, round)
-    
-    utils.run_sql_query(query, True)
+    submitted = False
 
-    return True
+    _, _, cut_off = Round.get_round_info(round_id)
 
+    if cut_off > datetime.now(): 
+
+        query = '''
+                SELECT COUNT(*) AS CHOICE_EXISTS 
+                FROM CHOICES 
+                WHERE PLAYER_ID = {}
+                AND ROUND = {}
+                '''.format(player, round_id)
+        
+        choices_exists = utils.run_sql_query(query)['CHOICE_EXISTS'][0]
+
+        if choices_exists == 0:
+
+            query = '''
+                    INSERT INTO CHOICES
+                    (PLAYER_ID, TEAM_CHOICE, ROUND)
+                    values
+                    ({}, '{}', {});
+                    '''.format(player, choice, round_id)
+            
+            utils.run_sql_query(query, True)
+
+            submitted = True
+        
+        else: 
+            submitted = 'Already Chosen'
+
+    else: 
+        submitted = 'Too Late'
+
+    return submitted
 
 def get_available_choices(player_id): 
     '''
     '''
     query = '''
             SELECT TEAM_NAME 
-            FROM FPG.TEAMS
+            FROM TEAMS
             WHERE TEAM_NAME NOT IN (SELECT TEAM_CHOICE
-                                    FROM FPG.CHOICES 
+                                    FROM CHOICES 
                                     WHERE PLAYER_ID = {}
                                     GROUP BY TEAM_CHOICE
                                     HAVING COUNT(*) > 1)
@@ -51,3 +77,16 @@ def get_available_choices(player_id):
     return data.to_json(orient='records')
 
 
+def update_choice(player, choice, round_id): 
+    '''
+    '''
+    query = '''
+            UPDATE CHOICES
+            SET TEAM_CHOICE = '{}'
+            WHERE PLAYER_ID = {}
+            AND ROUND = {}
+            '''.format(choice, player, round_id)
+    
+    utils.run_sql_query(query, True)
+
+    return True

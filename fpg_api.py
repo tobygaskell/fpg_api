@@ -75,11 +75,12 @@ def get_round_info():
 
     round = request_data['Round']
 
-    doubled, dmm = Round.get_round_info(round)
+    doubled, dmm, cut_off = Round.get_round_info(round)
 
     return {'Round'  : round, 
             'Double' : doubled, 
-            'DMM'    : dmm}
+            'DMM'    : dmm, 
+            'Cut Off': cut_off}
 
 @app.route('/make_choice', methods = ['POST'])
 def make_choice(): 
@@ -192,6 +193,38 @@ def get_current_round():
     round_id = Round.get_current_round()
     return {'Round ID' : round_id}
 
+@app.route('/update_choice', methods = ['POST'])
+def update_choice(): 
+    '''
+    '''
+    request_data = request.get_json()
+
+    choice = request_data['Choice']
+    player = request_data['Player']
+    round_id  = request_data['Round']
+
+    updated = Choices.update_choice(player, choice, round_id)
+
+    return {'Updated': updated}
+
+@app.route('/calculate_scores', methods = ['POST'])
+def calculate_scores():
+    request_data = request.get_json()
+
+    round_id = request_data['Round']
+
+    calculated = Scores.calculate_scores(round_id)
+
+    return {'Calculated':calculated}
+
+@app.route('/get_standings', methods = ['GET'])
+def get_standings(): 
+    '''
+    '''
+    standings = Results.get_standings()
+
+    return standings
+
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)
