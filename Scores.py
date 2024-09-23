@@ -8,7 +8,7 @@ import utils
 def get_score(result, h2h, derby, dmm, doubled): 
     '''
     '''
-    print(result)
+    # print(result)
     score, basic_score = get_basic(result)
 
     score, h2h_score = get_h2h(score, h2h, result)
@@ -122,7 +122,7 @@ def calculate_scores(round_id):
         fixture_id, derby, h2h = Games.get_game_info(choice, round_id)
         
         result = Results.get_result(choice, fixture_id)
-        print(choice, result)
+        # print(choice, result)
         # print('h2h: {}, derby: {}'.format(h2h, derby))
         score, basic_score, h2h_score, derby_score, dmm_score, subtotal = get_score(result, 
                                                                                     h2h, 
