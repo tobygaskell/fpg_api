@@ -99,10 +99,10 @@ def get_rolling_standings():
                     p.player_id, 
                 SUBSTRING_INDEX(email, '@', 1) AS USER,
                 COALESCE(SUM(TOTAL) OVER (PARTITION by player_id order by s.round asc), 0) as rolling_total
-            FROM DEV_FPG.SCORES AS s
-            INNER JOIN DEV_FPG.PLAYERS AS p
+            FROM SCORES AS s
+            INNER JOIN PLAYERS AS p
             ON s.PLAYER_ID = p.PLAYER_ID
-            INNER JOIN DEV_FPG.ROUNDS AS r
+            INNER JOIN ROUNDS AS r
             on s.ROUND = r.ROUND
             ) as a;
             '''
