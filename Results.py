@@ -88,3 +88,25 @@ def get_standings():
     data = utils.run_sql_query(query)
 
     return data.to_json(orient='records')
+
+def get_rolling_standings():
+    '''
+    '''
+    query = '''
+            select *, rank() over (partition by round order by rolling_total desc ) as position
+            from (
+            SELECT distinct s.round,
+                    p.player_id, 
+                SUBSTRING_INDEX(email, '@', 1) AS USER,
+                COALESCE(SUM(TOTAL) OVER (PARTITION by player_id order by s.round asc), 0) as rolling_total
+            FROM DEV_FPG.SCORES AS s
+            INNER JOIN DEV_FPG.PLAYERS AS p
+            ON s.PLAYER_ID = p.PLAYER_ID
+            INNER JOIN DEV_FPG.ROUNDS AS r
+            on s.ROUND = r.ROUND
+            ) as a;
+            '''
+    
+    data = utils.run_sql_query(query)
+
+    return data.to_json(orient='records')

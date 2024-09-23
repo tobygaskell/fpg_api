@@ -9,7 +9,7 @@ def get_player_id(email):
             FROM PLAYERS 
             WHERE EMAIL = '{}'
             '''.format(email)
-    print(query)
+#     print(query)
     return utils.run_sql_query(query)['PLAYER_ID'][0]
 
 def init_player(email): 

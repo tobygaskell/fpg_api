@@ -8,6 +8,7 @@ import utils
 def get_score(result, h2h, derby, dmm, doubled): 
     '''
     '''
+    # print(result)
     score, basic_score = get_basic(result)
 
     score, h2h_score = get_h2h(score, h2h, result)
@@ -21,6 +22,7 @@ def get_score(result, h2h, derby, dmm, doubled):
     score = get_doubled(score, doubled)
 
     return score, basic_score, h2h_score, derby_score, dmm_score, subtotal
+
 
 def assign_score(score, mapping, result): 
     '''
@@ -117,17 +119,48 @@ def calculate_scores(round_id):
     choices = Choices.get_choices(round_id)
 
     for player, choice in choices.items():
-        fixture_id, h2h, derby = Games.get_game_info(choice, round_id)
+        fixture_id, derby, h2h = Games.get_game_info(choice, round_id)
+        
         result = Results.get_result(choice, fixture_id)
+        # print(choice, result)
+        # print('h2h: {}, derby: {}'.format(h2h, derby))
         score, basic_score, h2h_score, derby_score, dmm_score, subtotal = get_score(result, 
                                                                                     h2h, 
                                                                                     derby, 
                                                                                     dmm, 
                                                                                     doubled)
-        
+        # print('choice: {}, h2h: {}, derby: {}'.format(choice, h2h_score, derby_score))
         save_score(player, round_id, score, basic_score, 
                    h2h_score, derby_score, dmm_score, 
                    subtotal)
+        
     calculated = True
 
     return calculated
+
+def get_points(round_id): 
+    '''
+    '''
+    query = '''
+            SELECT  
+                    SUBSTRING_INDEX(email, '@', 1) AS USER,
+                    TEAM_CHOICE,
+                    coalesce(basic_points, 0)   as basic_points, 
+                    coalesce(h2h_points, 0)     as h2h_points,
+                    coalesce(derby_points, 0)   as derby_points,
+                    coalesce(dmm_points, 0)     as dmm_points,
+                    coalesce(subtotal, 0)       as subtotal,
+                    coalesce(total, 0)          as total
+
+            FROM SCORES as s
+            LEFT JOIN PLAYERS as p
+            on s.player_id = p.player_id
+            LEFT JOIN CHOICES AS C
+            ON p.PLAYER_ID = C.PLAYER_ID AND s.ROUND = C.ROUND
+            WHERE s.round = {}
+            ORDER BY TOTAL DESC
+            '''.format(round_id)
+    
+    points = utils.run_sql_query(query)
+
+    return points.to_json(orient='records')
