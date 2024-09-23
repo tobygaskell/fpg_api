@@ -225,6 +225,27 @@ def get_standings():
 
     return standings
 
+@app.route('/get_points', methods = ['POST'])
+def get_points():
+    '''
+    '''
+    request_data = request.get_json()
+
+    round_id = request_data['Round']
+    # player_id = request_data['Player']
+
+    scores = Scores.get_points(round_id)
+
+    return scores
+
+@app.route('/get_rolling_standings', methods = ['GET'])
+def get_rolling_standings(): 
+    '''
+    '''
+    rolling_standings = Results.get_rolling_standings()
+
+    return rolling_standings
+
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)
