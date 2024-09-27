@@ -90,3 +90,26 @@ def update_choice(player, choice, round_id):
     utils.run_sql_query(query, True)
 
     return True
+
+
+def get_preious_choices(player_id): 
+    '''
+    '''
+    print(player_id)
+    query = '''
+            select team_name as Choice, case when choice_cnt > 0 then True else False end as '1st Pick', 
+                                        case when choice_cnt > 1 then True else False end as '2nd Pick' 
+
+            from ((
+            select team_name
+            from FPG.TEAMS )  t 
+            left join 
+            (
+            select Team_choice, count(*) as choice_cnt
+            FROM FPG.CHOICES c
+            WHERE PLAYER_ID = {}
+            group by team_choice) as c
+            on team_name = team_choice) 
+            '''.format(player_id)
+    data = utils.run_sql_query(query)
+    return data.to_json(orient= 'records')

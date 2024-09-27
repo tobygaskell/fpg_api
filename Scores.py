@@ -143,14 +143,14 @@ def get_points(round_id):
     '''
     query = '''
             SELECT  
-                    SUBSTRING_INDEX(email, '@', 1) AS USER,
-                    TEAM_CHOICE,
-                    coalesce(basic_points, 0)   as basic_points, 
-                    coalesce(h2h_points, 0)     as h2h_points,
-                    coalesce(derby_points, 0)   as derby_points,
-                    coalesce(dmm_points, 0)     as dmm_points,
-                    coalesce(subtotal, 0)       as subtotal,
-                    coalesce(total, 0)          as total
+                    SUBSTRING_INDEX(email, '@', 1) AS User,
+                    TEAM_CHOICE as Choice,
+                    coalesce(basic_points, 0)   as Basic, 
+                    coalesce(h2h_points, 0)     as 'Head 2 Head',
+                    coalesce(derby_points, 0)   as Derby,
+                    coalesce(dmm_points, 0)     as 'Draw Means More',
+                    coalesce(subtotal, 0)       as Subtotal,
+                    coalesce(total, 0)          as Total
 
             FROM SCORES as s
             LEFT JOIN PLAYERS as p
@@ -164,3 +164,4 @@ def get_points(round_id):
     points = utils.run_sql_query(query)
 
     return points.to_json(orient='records')
+
