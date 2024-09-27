@@ -78,7 +78,7 @@ def get_standings():
     '''
     '''
     query = '''
-            SELECT F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
+            SELECT RANK() over (ORDER BY SUM(total) DESC) as POSITION, F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
             FROM SCORES AS F
             INNER JOIN PLAYERS AS P 
             ON F.PLAYER_ID = P.PLAYER_ID

@@ -3,6 +3,8 @@ import pandas as pd
 import mysql.connector
 import requests
 from sqlalchemy import create_engine
+import yagmail
+
 
 def connect_sql():
     '''
@@ -72,3 +74,15 @@ def append_sql(data, table):
         return True
     except:
         return False
+    
+def send_email(email, subject, body): 
+    '''
+    '''
+    email_user = os.environ.get('email_user')
+    email_pass = os.environ.get('email_pass')
+    
+    yag = yagmail.SMTP(email_user, email_pass)
+
+    yag.send(email, subject, body)
+
+    return True
