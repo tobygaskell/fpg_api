@@ -58,20 +58,21 @@ def get_round_info(round_id):
 
     return doubled, dmm, cut_off 
 
-def get_current_round(): 
+def get_current_round(method = 'sql'): 
     '''
     '''
-    # round_id = utils.get_api("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds", 
-    #                         {"league":"39", 
-    #                          "season":"2024", 
-    #                          "current":"true"})['response'][0][-2:].strip()
-    
-    query = '''
-            SELECT MAX(ROUND) as current_round
-            FROM LOGS 
-            '''
-    print(query)
-    round_id = utils.run_sql_query(query)['current_round'][0]
+    if method == 'api':
+        round_id = utils.get_api("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds", 
+                                {"league":"39", 
+                                "season":"2024", 
+                                "current":"true"})['response'][0][-2:].strip()
+    elif method == 'sql':
+        query = '''
+                SELECT MAX(ROUND) as current_round
+                FROM LOGS 
+                '''
+        print(query)
+        round_id = utils.run_sql_query(query)['current_round'][0]
 
     return int(round_id)
 

@@ -8,7 +8,7 @@ def main():
     '''
     TODO: Test
     '''
-    round_id = Round.get_current_round()
+    round_id = Round.get_current_round('api')
 
     changed, last_round_id = Round.round_changed(round_id) 
 
