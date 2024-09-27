@@ -77,13 +77,66 @@ def get_result(choice, fixture_id):
 def get_standings(): 
     '''
     '''
+    # query = '''
+    #         SELECT RANK() over (ORDER BY SUM(total) DESC) as POSITION, F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
+    #         FROM SCORES AS F
+    #         INNER JOIN PLAYERS AS P 
+    #         ON F.PLAYER_ID = P.PLAYER_ID
+    #         GROUP BY player_id 
+    #         ORDER BY sum(total) desc;
+    #         '''
+    
     query = '''
-            SELECT RANK() over (ORDER BY SUM(total) DESC) as POSITION, F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
-            FROM SCORES AS F
-            INNER JOIN PLAYERS AS P 
+            with base as (
+            select distinct c.player_id, r.round, r.fixture_id, team_choice, home_team, away_team, home_goals, away_goals,  home_goals - away_goals as GD
+            from FPG.RESULTS r 
+            left join FPG.FIXTURES f 
+            on r.FIXTURE_ID  = f.FIXTURE_ID 
+            left join FPG.CHOICES c 
+            on TEAM_CHOICE = home_team 
+            and r.round = c.round
+            left join FPG.PLAYERS p 
+            on c.PLAYER_ID  = p.PLAYER_ID 
+
+            union 
+
+            select distinct c.player_id, r.round, r.fixture_id, team_choice, home_team, away_team, home_goals, away_goals, away_goals - home_goals as GD
+            from FPG.RESULTS r 
+            left join FPG.FIXTURES f 
+            on r.FIXTURE_ID  = f.FIXTURE_ID 
+            left join FPG.CHOICES c 
+            on TEAM_CHOICE = away_team 
+            and r.round = c.round
+            left join FPG.PLAYERS p 
+            on c.PLAYER_ID  = p.PLAYER_ID 
+            )
+
+            , subtotal as (
+            select *, sum(GD) over (partition by player_id order by round asc) as rolling_gd
+            from base
+            where player_id is not null
+            order by player_id, round desc
+            )
+
+            , standings as ( 
+            SELECT  F.PLAYER_ID, SUBSTRING_INDEX(email, '@', 1) AS USER, SUM(total) AS SCORE 
+            FROM FPG.SCORES AS F
+            INNER JOIN FPG.PLAYERS AS P 
             ON F.PLAYER_ID = P.PLAYER_ID
             GROUP BY player_id 
-            ORDER BY sum(total) desc;
+            ORDER BY sum(total) desc
+            )
+
+            , totals as (
+            select player_id, rolling_gd
+            from subtotal
+            where round in (select max(round) from subtotal) 
+            )
+
+            select RANK() over (ORDER BY score DESC, rolling_gd desc) as Position, stand.player_id, user as User, rolling_gd as 'Goal Diff', score as Score
+            from standings as stand 
+            inner join totals as t 
+            on stand.player_id = t.player_id;
             '''
     data = utils.run_sql_query(query)
 
@@ -94,11 +147,8 @@ def get_rolling_standings():
     '''
     query = '''
             select *, rank() over (partition by round order by rolling_total desc ) as position
-            from (
-            SELECT distinct s.round,
-                    p.player_id, 
-                SUBSTRING_INDEX(email, '@', 1) AS USER,
-                COALESCE(SUM(TOTAL) OVER (PARTITION by player_id order by s.round asc), 0) as rolling_total
+            from (SELECT distinct s.round, p.player_id, SUBSTRING_INDEX(email, '@', 1) AS USER, 
+                         COALESCE(SUM(TOTAL) OVER (PARTITION by player_id order by s.round asc), 0) as rolling_total
             FROM SCORES AS s
             INNER JOIN PLAYERS AS p
             ON s.PLAYER_ID = p.PLAYER_ID

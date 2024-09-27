@@ -246,6 +246,19 @@ def get_rolling_standings():
 
     return rolling_standings
 
+@app.route('/get_previous_choices', methods = ['POST'])
+def get_previous_choices():
+    '''
+    '''
+    request_data = request.get_json()
+
+    player = request_data['Player']
+    # player_id = request_data['Player']
+
+    prev_choices = Choices.get_preious_choices(player)
+
+    return prev_choices
+
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)
