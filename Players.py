@@ -32,3 +32,15 @@ def init_player(email):
         utils.run_sql_query(query, True)
 
     return get_player_id(email)
+
+def get_all_emails(): 
+    '''
+    '''
+    query = '''
+            SELECT email 
+            FROM PLAYERS
+            WHERE player_id NOT IN (4, 5, 8, 9)
+            '''
+    
+    data = utils.run_sql_query(query)['email'].to_list()
+    return data
