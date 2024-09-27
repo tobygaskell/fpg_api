@@ -32,9 +32,7 @@ returns = {
     'Result': 4, 
     'Sub Total': 2
     }
-
 ```
-
 
 #### get_result
 
