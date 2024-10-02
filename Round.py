@@ -12,33 +12,34 @@ def init_round(round_id):
         doubled = random.randrange(100) < 10
 
         query = '''
-                SELECT MIN(kickoff) AS CUTOFF, 
+                SELECT MIN(kickoff) AS CUTOFF,
                        DATE(MAX(kickoff)) AS END_DATE
-                FROM FIXTURES 
+                FROM FIXTURES
                 WHERE round = {}
                 AND season = 2024
                 '''.format(round_id)
-        
+
         df = utils.run_sql_query(query)
 
         cutoff = df['CUTOFF'][0]
         end_date = df['END_DATE'][0]
 
         query = '''
-                INSERT INTO ROUNDS 
+                INSERT INTO ROUNDS
                 (ROUND, DP_ROUND, DMM_ROUND, CUT_OFF, END_DATE)
                 VALUES
                 ({}, {}, {}, '{}', '{}')
                 '''.format(round_id, dmm, doubled, cutoff, end_date)
-        
+
         utils.run_sql_query(query, True)
 
         init = True
 
     else:
         init = False
-        
+
     return init
+
 
 def get_round_info(round_id):
     '''
@@ -49,34 +50,41 @@ def get_round_info(round_id):
             WHERE ROUND = {}
             LIMIT 1
             '''.format(round_id)
-    
+
     data = utils.run_sql_query(query)
 
     doubled = bool(data['DP_ROUND'][0])
     dmm = bool(data['DMM_ROUND'][0])
     cut_off = data['CUT_OFF'][0]
 
-    return doubled, dmm, cut_off 
+    return doubled, dmm, cut_off
 
-def get_current_round(method = 'sql'): 
+
+def get_current_round(method='sql'):
     '''
     '''
     if method == 'api':
-        round_id = utils.get_api("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds", 
-                                {"league":"39", 
-                                "season":"2024", 
-                                "current":"true"})['response'][0][-2:].strip()
+        url = "https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds"
+
+        response = utils.get_api(url,
+                                 {"league": "39",
+                                  "season": "2024",
+                                  "current": "true"})
+
+        round_id = response['response'][0][-2:].strip()
+
     elif method == 'sql':
         query = '''
                 SELECT MAX(ROUND) as current_round
-                FROM LOGS 
+                FROM LOGS
                 '''
-        print(query)
+
         round_id = utils.run_sql_query(query)['current_round'][0]
 
     return int(round_id)
 
-def round_changed(round_id): 
+
+def round_changed(round_id):
     '''
     '''
     changed = False
@@ -89,7 +97,7 @@ def round_changed(round_id):
             '''
     last_round_id = int(utils.run_sql_query(query)['ROUND'][0])
 
-    if last_round_id != int(round_id): 
+    if last_round_id != int(round_id):
         changed = True
 
     return changed, last_round_id

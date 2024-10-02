@@ -9,84 +9,128 @@ This is a backend API for the FPG app
 ```cat nohup.out``` -- This will allow you to see the output of the api
 
 ## Post Endpoints 
+- get_score             -- Not Needed -- POST
+- get_result            -- Not Needed -- POST
+- get_choices           -- Not Needed -- POST
+- init_round            -- Not Needed -- POST
+- get_logo              -- Not Needed -- POST
+- inti_results          -- Not Needed -- POST
+- calculate_scores      -- Not Needed -- POST 
 
-#### get_score
-This endpoint will be used to get the score for a given result  
-For example: if a player picked a team that won you would post win and the round params for the given round and this endpoint would return the score breakdown gained from that match. 
+- engine                              -- GET
+- get_current_round                   -- GET
+- get_standings                       -- GET
+- get_rolling_standings               -- GET
+
+- init_player                         -- POST
+- get_previous_choices                -- POST
+- get_available_choices               -- POST
+- get_round_info                      -- POST
+- get_fixtures                        -- POST
+- get_points                          -- POST
+
+- make_choice                         -- POST
+- update_choice                       -- POST
+
+---
+# GET
+
+#### engine (GET)
 ```
-data = {
-    'Player'  : <player name>, 
-    'Result'  : 'Win'/'Lose'/'Draw',
-    'H2H'     : True/False, 
-    'Derby'   : True/False, 
-    'DMM'     : True/False, 
-    'Doubled' : True/False
-    }
-```
-```
-returns = {
-    'Basic': 1, 
-    'DMM': 0, 
-    'Derby': None, 
-    'H2H': 1, 
-    'Result': 4, 
-    'Sub Total': 2
-    }
+returns = {'Everyday Ran':True}
 ```
 
-#### get_result
-
+#### get_current_round (GET)
 ```
-data = {'':'', 
-        '':'', 
-        }
+returns = {'Round ID':3}
+```
+
+#### get_standings (GET)
+```
+returns = {'':'', 
+           '':''}
+```
+
+### get_rolling_standings (GET)
+```
+returns = {'':'', 
+           '':''}
+```
+
+#### init_player (POST)
+```
+data = {'Email':'Test@Test.com'}
+```
+```
+returns = {'player_id':3}
+```
+
+### get_previous_choices (POST)
+```
+data = {'Player':3}
 ```
 ```
 returns = {'':'', 
-           '':'', 
-           }
+           '':''}
 ```
 
-#### get_round_info
-
+#### get_available_choices (POST)
 ```
-data = {'':'', 
-        '':'', 
-        }
+data = {'Player':3}
 ```
 ```
 returns = {'':'', 
-           '':'', 
-           }
+           '':''}
 ```
 
-#### make_choice
-
+#### get_round_info (POST)
 ```
-data = {'':'', 
-        '':'', 
-        }
+data = {'Round':10}
+```
+```
+returns = {'Round'  : 10, 
+           'Double' : True/False, 
+           'DMM'    : True/False, 
+           'Cut Off': '2024-10-09 10:50'}
+```
+
+#### get_fixtures (POST)
+```
+data = {'Round':10}
 ```
 ```
 returns = {'':'', 
-           '':'', 
-           }
+           '':''}
 ```
 
-
-## Get Endpoints
-
-#### get_choice
+#### get_points (POST)
 ```
-returns = {'':'', 
-           '':'', 
-           }
+data = {'Round':10}
 ```
-
-#### get_teams
-
 ```
 returns = {'':'', 
-           '':'', 
-           }
+           '':''}
+```
+
+--- 
+# POST 
+
+#### make_choice (POST)
+```
+data = {'Choice'  : 'Manchester United', 
+        'Player'  : 3,
+        'Round'   : 10}
+```
+```
+returns = {'Submitted':True/False}
+```
+
+#### update_choice (POST)
+```
+data = {'Choice'  : 'Manchester United', 
+        'Player'  : 3, 
+        'Round'   : 10}
+```
+```
+returns = {'Updated':True/False}
 ```
