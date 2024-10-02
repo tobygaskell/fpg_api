@@ -1,18 +1,19 @@
 import utils
 
 
-def get_player_id(email): 
+def get_player_id(email):
     '''
     '''
     query = '''
-            SELECT PLAYER_ID 
-            FROM PLAYERS 
+            SELECT PLAYER_ID
+            FROM PLAYERS
             WHERE EMAIL = '{}'
             '''.format(email)
-#     print(query)
+
     return utils.run_sql_query(query)['PLAYER_ID'][0]
 
-def init_player(email): 
+
+def init_player(email):
     '''
     '''
     query = '''
@@ -21,7 +22,7 @@ def init_player(email):
             WHERE EMAIL = '{}'
             '''.format(email)
 
-    if utils.run_sql_query(query)['PLAYER_EXISTS'][0] == 0: 
+    if utils.run_sql_query(query)['PLAYER_EXISTS'][0] == 0:
 
         query = '''
                 INSERT INTO PLAYERS
@@ -33,14 +34,15 @@ def init_player(email):
 
     return get_player_id(email)
 
-def get_all_emails(): 
+
+def get_all_emails():
     '''
     '''
     query = '''
-            SELECT email 
+            SELECT email
             FROM PLAYERS
             WHERE player_id NOT IN (4, 5, 8, 9)
             '''
-    
+
     data = utils.run_sql_query(query)['email'].to_list()
     return data
