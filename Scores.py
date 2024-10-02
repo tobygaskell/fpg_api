@@ -149,9 +149,14 @@ def get_points(round_id):
     '''
     '''
     query = '''
-            SELECT
+            SELECT  
+                    p.player_id,
                     SUBSTRING_INDEX(email, '@', 1)  AS User,
                     team_choice                     AS Choice,
+                    CASE WHEN COALESCE(basic_points, 0) = 1 THEN 'Won'
+                         WHEN COALESCE(basic_points, 0) = 0 THEN 'Drew'
+                         WHEN COALESCE(basic_points, 0) = -1 THEN 'Lost'
+                    END as Result,
                     COALESCE(basic_points, 0)       AS Basic,
                     COALESCE(h2h_points, 0)         AS 'Head 2 Head',
                     COALESCE(derby_points, 0)       AS Derby,
@@ -164,7 +169,7 @@ def get_points(round_id):
             LEFT JOIN CHOICES AS c
             ON p.player_id = c.player_id AND s.round = c.round
             WHERE s.round = {}
-            ORDER BY TOTAL DESC
+            ORDER BY TOTAL DESC, Result Desc
             '''.format(round_id)
 
     points = utils.run_sql_query(query)
