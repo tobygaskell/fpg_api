@@ -209,15 +209,15 @@ def get_rolling_standings():
             ON s.PLAYER_ID = p.PLAYER_ID
             INNER JOIN ROUNDS AS r
             on s.ROUND = r.ROUND
-            ) as a) 
-            
+            ) as a )
+
 select RANK() over (partition by t.round ORDER BY rolling_total DESC,
        rolling_gd desc) as Position,
        stand.player_id,
        user as User,
        rolling_gd as 'Goal Diff',
-       rolling_total as Score, 
-       t.round 
+       rolling_total as Score,
+       t.round
 from standings as stand
 inner join subtotal as t
 on stand.player_id = t.player_id and stand.round = t.round;

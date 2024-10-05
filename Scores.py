@@ -149,7 +149,7 @@ def get_points(round_id):
     '''
     '''
     query = '''
-            SELECT  
+            SELECT
                     p.player_id,
                     SUBSTRING_INDEX(email, '@', 1)  AS User,
                     team_choice                     AS Choice,

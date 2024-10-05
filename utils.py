@@ -95,3 +95,21 @@ def send_email(email, subject, body):
     yag.send(email, subject, body)
 
     return True
+
+
+def log_call(player_id, endpoint):
+    '''
+    Args:
+        player_id (_type_): _description_
+        endpoint (_type_): _description_
+    '''
+    query = '''
+            INSERT INTO CALL_LOGS
+            (player_id, endpoint, call_time)
+            values
+            ({}, '{}', CURRENT_TIMESTAMP(2))
+            '''.format(player_id if player_id else 'null', endpoint)
+
+    run_sql_query(query, True)
+
+    return True

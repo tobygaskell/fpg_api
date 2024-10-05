@@ -9,7 +9,7 @@ import Choices
 import Games
 import Fixtures
 import Teams
-
+import utils
 
 app = Flask(__name__)
 
@@ -62,50 +62,6 @@ def get_result():
             'Derby': derby}
 
 
-@app.route('/get_round_info', methods=['POST'])
-def get_round_info():
-    '''
-    '''
-    request_data = request.get_json()
-
-    round = request_data['Round']
-
-    doubled, dmm, cut_off = Round.get_round_info(round)
-
-    return {'Round': round,
-            'Double': doubled,
-            'DMM': dmm,
-            'Cut Off': cut_off}
-
-
-@app.route('/make_choice', methods=['POST'])
-def make_choice():
-    '''
-    '''
-    request_data = request.get_json()
-
-    choice = request_data['Choice']
-    player = request_data['Player']
-    round = request_data['Round']
-
-    submitted = Choices.make_choice(player, choice, round)
-
-    return {'Submitted': submitted}
-
-
-@app.route('/get_choices', methods=['POST'])
-def get_choices():
-    '''
-    '''
-    request_data = request.get_json()
-
-    round_id = request_data['Round']
-
-    data = Choices.get_choices(round_id)
-
-    return data
-
-
 @app.route('/init_round', methods=['POST'])
 def init_round():
     '''
@@ -127,19 +83,6 @@ def init_round():
             'Message': message}
 
 
-@app.route('/init_player', methods=['POST'])
-def init_player():
-    '''
-    '''
-    request_data = request.get_json()
-
-    email = request_data['Email']
-
-    player_id = Players.init_player(email)
-
-    return {'player_id': int(player_id)}
-
-
 @app.route('/get_logo', methods=['POST'])
 def get_logo():
     '''
@@ -149,15 +92,6 @@ def get_logo():
     team = request_data['Team']
 
     return {'Logo': Teams.get_logo(team)}
-
-
-@app.route('/engine', methods=['GET'])
-def engine():
-    '''
-    '''
-    Engine.main()
-
-    return {'Everyday Ran': True}
 
 
 @app.route('/init_results', methods=['POST'])
@@ -173,24 +107,108 @@ def init_results():
     return {'Saved': saved}
 
 
-@app.route('/get_fixtures', methods=['POST'])
-def get_fixtures():
+@app.route('/calculate_scores', methods=['POST'])
+def calculate_scores():
     '''
     '''
     request_data = request.get_json()
 
     round_id = request_data['Round']
 
+    calculated = Scores.calculate_scores(round_id)
+
+    return {'Calculated': calculated}
+
+
+# ----------------------------------------------------------------------------
+# GET
+# ----------------------------------------------------------------------------
+
+
+@app.route('/get_round_info', methods=['GET'])
+def get_round_info():
+    '''
+    '''
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    round_id = request.args.get('round_id')
+
+    doubled, dmm, cut_off = Round.get_round_info(round_id)
+
+    utils.log_call(player_id, 'get_round_info')
+
+    return {'Round': round_id,
+            'Double': doubled,
+            'DMM': dmm,
+            'Cut Off': cut_off}
+
+
+@app.route('/get_choices', methods=['GET'])
+def get_choices():
+    '''
+    '''
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    round_id = request.args.get('round_id')
+
+    data = Choices.get_choices(round_id)
+
+    utils.log_call(player_id, 'get_choices')
+
+    return data
+
+
+@app.route('/init_player', methods=['GET'])
+def init_player():
+    '''
+    '''
+    email = request.args.get('email')
+
+    player_id = Players.init_player(email)
+
+    utils.log_call(player_id, 'init_player')
+
+    return {'player_id': int(player_id)}
+
+
+@app.route('/engine', methods=['GET'])
+def engine():
+    '''
+    '''
+    Engine.main()
+
+    return {'Everyday Ran': True}
+
+
+@app.route('/get_fixtures', methods=['GET'])
+def get_fixtures():
+    '''
+    '''
+    round_id = request.args.get('round_id')
+
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    utils.log_call(player_id, 'get_fixtures')
+
     return Fixtures.get_fixtures(round_id)
 
 
-@app.route('/get_available_choices', methods=['POST'])
+@app.route('/get_available_choices', methods=['GET'])
 def get_available_choices():
     '''
     '''
-    request_data = request.get_json()
+    player_id = request.args.get('player_id')
 
-    player_id = request_data['Player']
+    utils.log_call(player_id, 'get_available_choices')
 
     return Choices.get_available_choices(player_id)
 
@@ -201,7 +219,97 @@ def get_current_round():
     '''
     round_id = Round.get_current_round()
 
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    utils.log_call(player_id, 'current_round')
+
     return {'Round ID': round_id}
+
+
+@app.route('/get_standings', methods=['GET'])
+def get_standings():
+    '''
+    '''
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    standings = Results.get_standings()
+
+    utils.log_call(player_id, 'get_standings')
+
+    return standings
+
+
+@app.route('/get_points', methods=['GET'])
+def get_points():
+    '''
+    '''
+    round_id = request.args.get('round_id')
+
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    scores = Scores.get_points(round_id)
+
+    utils.log_call(player_id, 'get_points')
+
+    return scores
+
+
+@app.route('/get_rolling_standings', methods=['GET'])
+def get_rolling_standings():
+    '''
+    '''
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    rolling_standings = Results.get_rolling_standings()
+
+    utils.log_call(player_id, 'get_rolling_standings')
+
+    return rolling_standings
+
+
+@app.route('/get_previous_choices', methods=['GET'])
+def get_previous_choices():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    prev_choices = Choices.get_previous_choices(player_id)
+
+    utils.log_call(player_id, 'get_previous_choices')
+
+    return prev_choices
+
+
+# ----------------------------------------------------------------------------
+# POST
+# ----------------------------------------------------------------------------
+
+
+@app.route('/make_choice', methods=['POST'])
+def make_choice():
+    '''
+    '''
+    request_data = request.get_json()
+
+    choice = request_data['Choice']
+    player = request_data['Player']
+    round = request_data['Round']
+
+    submitted = Choices.make_choice(player, choice, round)
+
+    return {'Submitted': submitted}
 
 
 @app.route('/update_choice', methods=['POST'])
@@ -219,63 +327,6 @@ def update_choice():
     return {'Updated': updated}
 
 
-@app.route('/calculate_scores', methods=['POST'])
-def calculate_scores():
-    '''
-    '''
-    request_data = request.get_json()
-
-    round_id = request_data['Round']
-
-    calculated = Scores.calculate_scores(round_id)
-
-    return {'Calculated': calculated}
-
-
-@app.route('/get_standings', methods=['GET'])
-def get_standings():
-    '''
-    '''
-    standings = Results.get_standings()
-
-    return standings
-
-
-@app.route('/get_points', methods=['POST'])
-def get_points():
-    '''
-    '''
-    request_data = request.get_json()
-
-    round_id = request_data['Round']
-
-    scores = Scores.get_points(round_id)
-
-    return scores
-
-
-@app.route('/get_rolling_standings', methods=['GET'])
-def get_rolling_standings():
-    '''
-    '''
-    rolling_standings = Results.get_rolling_standings()
-
-    return rolling_standings
-
-
-@app.route('/get_previous_choices', methods=['POST'])
-def get_previous_choices():
-    '''
-    '''
-    request_data = request.get_json()
-
-    player = request_data['Player']
-
-    prev_choices = Choices.get_previous_choices(player)
-
-    return prev_choices
-
-
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)
