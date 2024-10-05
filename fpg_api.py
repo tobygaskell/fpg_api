@@ -309,6 +309,8 @@ def make_choice():
 
     submitted = Choices.make_choice(player, choice, round)
 
+    utils.log_call(player, 'make_choice')
+
     return {'Submitted': submitted}
 
 
@@ -323,6 +325,8 @@ def update_choice():
     round_id = request_data['Round']
 
     updated = Choices.update_choice(player, choice, round_id)
+
+    utils.log_call(player, 'update_choice')
 
     return {'Updated': updated}
 
