@@ -32,9 +32,8 @@ def init_results(round):
 
         home_goals = results['response'][i]['goals']['home']
         away_goals = results['response'][i]['goals']['away']
-
         begin = results['response'][i]
-        fixtures = begin['fixtures']
+        fixtures = begin['fixture']
         league = begin['league']
 
         new_row = pd.DataFrame({'FIXTURE_ID': [fixtures['id']],
