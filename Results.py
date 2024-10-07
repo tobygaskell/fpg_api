@@ -33,8 +33,6 @@ def init_results(round):
         home_goals = results['response'][i]['goals']['home']
         away_goals = results['response'][i]['goals']['away']
         begin = results['response'][i]
-        print(begin)
-
         fixtures = begin['fixture']
         league = begin['league']
 
