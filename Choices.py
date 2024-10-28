@@ -154,10 +154,73 @@ def get_previous_choices(player_id):
             select Team_choice, count(*) as choice_cnt
             FROM CHOICES c
             WHERE PLAYER_ID = {}
+            and c.round <> (SELECT MAX(Round) from ROUNDS)
             group by team_choice) as c
             on team_name = team_choice)
+            ORDER BY case when choice_cnt > 1
+                          then True else False end desc,
+                     case when choice_cnt > 0
+                          then True else False end desc, Choice
             '''.format(player_id)
 
     data = utils.run_sql_query(query)
 
+    return data.to_json(orient='records')
+
+
+def get_previous_points(player_id):
+    '''
+
+    Args:
+        player_id (_type_): _description_
+    '''
+    query = '''
+            WITH a as (
+                select s.player_id, s.round,
+                       COALESCE(total, 0) as total,
+                       c.team_choice
+                from SCORES s
+                inner join CHOICES c
+                on s.round = c.ROUND
+                and s.PLAYER_ID = c.PLAYER_ID
+                where s.player_id = {}
+                order by s.round)
+
+            , first_pick as (
+                select c.team_choice, coalesce(total, 0) as first_pick
+                from (
+                (select * from a) as c
+                inner join
+                (select team_choice, min(round) as first_pick
+                 from a
+                 group by team_choice) as b
+                on c.team_choice = b.team_choice
+                and c.round = b.first_pick))
+
+            , second_pick as (
+                select c.team_choice, coalesce(total, 0) as second_pick
+                from (
+                (select * from a) as c
+                inner join
+                (select team_choice, max(round) as second_pick,
+                        count(*) as pick_cnt
+                 from a
+                 group by team_choice
+                 having pick_cnt = 2 ) as b
+                on c.team_choice = b.team_choice
+                and c.round = b.second_pick))
+
+            select COALESCE(q.team_choice, t.team_name) as Choice,
+                   first_pick as '1st Pick',
+                   second_pick as '2nd Pick'
+            from first_pick as q
+            left join second_pick as w
+            on q.team_choice = w.team_choice
+            right join TEAMS t
+            on q.team_choice = t.TEAM_NAME
+            order by coalesce(second_pick, -100000) desc,
+                     coalesce(first_pick, -100000) desc,
+                     Choice
+            '''.format(player_id)
+    data = utils.run_sql_query(query)
     return data.to_json(orient='records')
