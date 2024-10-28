@@ -292,6 +292,18 @@ def get_previous_choices():
     return prev_choices
 
 
+@app.route('/get_previous_points', methods=['GET'])
+def get_previous_points():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    prev_points = Choices.get_previous_points(player_id)
+
+    utils.log_call(player_id, 'get_previous_points')
+
+    return prev_points
+
 # ----------------------------------------------------------------------------
 # POST
 # ----------------------------------------------------------------------------
