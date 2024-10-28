@@ -169,7 +169,7 @@ def get_points(round_id):
             LEFT JOIN CHOICES AS c
             ON p.player_id = c.player_id AND s.round = c.round
             WHERE s.round = {}
-            ORDER BY TOTAL DESC, Result Desc
+            ORDER BY TOTAL DESC, Result Desc, Choice
             '''.format(round_id)
 
     points = utils.run_sql_query(query)
