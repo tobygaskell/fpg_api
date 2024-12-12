@@ -49,7 +49,7 @@ def init_results(round):
                                 'WINNER': [winner]})
 
         results_df = pd.concat([results_df, new_row])
-    print(results_df)
+    # print(results_df)
     return utils.append_sql(results_df, 'RESULTS')
 
 
