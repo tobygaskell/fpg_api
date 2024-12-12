@@ -113,3 +113,4 @@ def log_call(player_id, endpoint):
     run_sql_query(query, True)
 
     return True
+

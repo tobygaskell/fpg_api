@@ -24,11 +24,14 @@ def init_results(round):
         teams.append(results['response'][i]['teams']['home'])
         teams.append(results['response'][i]['teams']['away'])
 
-        if len([i['name'] for i in teams if i['winner']]) == 1:
-            winner = [i['name'] for i in teams if i['winner']][0]
+        if results['response'][i]['fixture']['status']['long'] == 'Match Finished':
+            if len([i['name'] for i in teams if i['winner']]) == 1:
+                winner = [i['name'] for i in teams if i['winner']][0]
 
+            else:
+                winner = 'Draw'
         else:
-            winner = 'Draw'
+            winner = None
 
         home_goals = results['response'][i]['goals']['home']
         away_goals = results['response'][i]['goals']['away']
@@ -46,7 +49,7 @@ def init_results(round):
                                 'WINNER': [winner]})
 
         results_df = pd.concat([results_df, new_row])
-
+    print(results_df)
     return utils.append_sql(results_df, 'RESULTS')
 
 
