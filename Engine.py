@@ -13,6 +13,12 @@ def main():
 
     changed, last_round_id = Round.round_changed(round_id)
 
+    # To Test --------------
+    # round_id = 16
+    # changed = True
+    # last_round_id = 15
+    # -------------------
+
     collected = False
     calculated = False
     configured = False

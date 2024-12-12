@@ -34,7 +34,8 @@ def get_basic(result):
     '''
     mapping = {'Win': 1,
                'Loss': -1,
-               'Draw': 0}
+               'Draw': 0,
+               None: None}
 
     score, basic_score = assign_score(0, mapping, result)
 
@@ -49,7 +50,8 @@ def get_h2h(score, h2h, result):
     if h2h:
         mapping = {'Win': 1,
                    'Loss': -1,
-                   'Draw': 0}
+                   'Draw': 0,
+                   None: None}
 
         score, h2h_score = assign_score(score, mapping, result)
 
@@ -63,7 +65,8 @@ def get_derby(score, derby, result):
     if derby:
         mapping = {'Win': 1,
                    'Loss': -1,
-                   'Draw': -1}
+                   'Draw': -1,
+                   None: None}
 
         score, derby_score = assign_score(score, mapping, result)
 
@@ -77,7 +80,8 @@ def get_dmm(score, dmm, result):
     if dmm:
         mapping = {'Win': 0,
                    'Loss': 0,
-                   'Draw': 2}
+                   'Draw': 2,
+                   None: None}
 
         score, dmm_score = assign_score(score, mapping, result)
 
