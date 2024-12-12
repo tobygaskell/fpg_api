@@ -34,8 +34,7 @@ def get_basic(result):
     '''
     mapping = {'Win': 1,
                'Loss': -1,
-               'Draw': 0,
-               None: None}
+               'Draw': 0}
 
     score, basic_score = assign_score(0, mapping, result)
 
@@ -50,8 +49,7 @@ def get_h2h(score, h2h, result):
     if h2h:
         mapping = {'Win': 1,
                    'Loss': -1,
-                   'Draw': 0,
-                   None: None}
+                   'Draw': 0}
 
         score, h2h_score = assign_score(score, mapping, result)
 
@@ -65,8 +63,7 @@ def get_derby(score, derby, result):
     if derby:
         mapping = {'Win': 1,
                    'Loss': -1,
-                   'Draw': -1,
-                   None: None}
+                   'Draw': -1}
 
         score, derby_score = assign_score(score, mapping, result)
 
@@ -80,8 +77,7 @@ def get_dmm(score, dmm, result):
     if dmm:
         mapping = {'Win': 0,
                    'Loss': 0,
-                   'Draw': 2,
-                   None: None}
+                   'Draw': 2}
 
         score, dmm_score = assign_score(score, mapping, result)
 
@@ -136,13 +132,13 @@ def calculate_scores(round_id):
         fixture_id, derby, h2h = Games.get_game_info(choice, round_id)
 
         result = Results.get_result(choice, fixture_id)
+        if result in ['Win', 'Loss', 'Draw']:
+            score, basic_score, h2h_score, derby_score, dmm_score, subtotal = (
+                get_score(result, h2h, derby, dmm, doubled))
 
-        score, basic_score, h2h_score, derby_score, dmm_score, subtotal = (
-            get_score(result, h2h, derby, dmm, doubled))
-
-        save_score(player, round_id, score, basic_score,
-                   h2h_score, derby_score, dmm_score,
-                   subtotal)
+            save_score(player, round_id, score, basic_score,
+                       h2h_score, derby_score, dmm_score,
+                       subtotal)
 
     calculated = True
 
