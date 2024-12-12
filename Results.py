@@ -91,8 +91,8 @@ def get_standings():
     query = '''
             WITH base as (
             SELECT distinct c.player_id, r.round, r.fixture_id,
-                   team_choice, home_team, away_team, home_goals,
-                   away_goals,  home_goals - away_goals as GD
+                team_choice, home_team, away_team, home_goals,
+                away_goals,  home_goals - away_goals as GD
             from RESULTS r
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
@@ -105,8 +105,8 @@ def get_standings():
             union
 
             select distinct c.player_id, r.round, r.fixture_id,
-                   team_choice, home_team, away_team, home_goals,
-                   away_goals, away_goals - home_goals as GD
+                team_choice, home_team, away_team, home_goals,
+                away_goals, away_goals - home_goals as GD
             from RESULTS r
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
@@ -137,19 +137,24 @@ def get_standings():
             )
 
             , totals as (
-            select player_id, cast(rolling_gd as int) as rolling_gd
-            from subtotal
-            where round in (select max(round) from subtotal)
+            select a.player_id, rolling_gd
+            from ((
+            select player_id, round, cast(rolling_gd as int) as rolling_gd
+            from subtotal ) a
+            inner join 
+            (select player_id, max(round) as round from subtotal group by player_id) b 
+            on a.player_id = b.player_id 
+            and a.round = b.round ) 
             )
 
             select RANK() over (ORDER BY score DESC,
-                                         rolling_gd desc) as Position,
-                   stand.player_id,
-                   user as User,
-                   rolling_gd as 'Goal Diff',
-                   score as Score
+                                        rolling_gd desc) as Position,
+                stand.player_id,
+                user as User,
+                rolling_gd as 'Goal Diff',
+                score as Score
             from standings as stand
-            inner join totals as t
+            left join totals as t
             on stand.player_id = t.player_id;
             '''
     data = utils.run_sql_query(query)
