@@ -304,6 +304,19 @@ def get_previous_points():
 
     return prev_points
 
+
+@app.route('/get_player_info', methods=['GET'])
+def get_player_info():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    player_info = Players.get_player_info(player_id)
+
+    utils.log_call(player_id, 'get_player_info')
+
+    return player_info
+
 # ----------------------------------------------------------------------------
 # POST
 # ----------------------------------------------------------------------------
@@ -344,5 +357,5 @@ def update_choice():
 
 
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     app.run(host='0.0.0.0', port=5001)

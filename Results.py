@@ -141,10 +141,12 @@ def get_standings():
             from ((
             select player_id, round, cast(rolling_gd as int) as rolling_gd
             from subtotal ) a
-            inner join 
-            (select player_id, max(round) as round from subtotal group by player_id) b 
-            on a.player_id = b.player_id 
-            and a.round = b.round ) 
+            inner join
+            (select player_id, max(round) as round
+             from subtotal
+             group by player_id) b
+            on a.player_id = b.player_id
+            and a.round = b.round )
             )
 
             select RANK() over (ORDER BY score DESC,

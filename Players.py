@@ -46,3 +46,24 @@ def get_all_emails():
 
     data = utils.run_sql_query(query)['email'].to_list()
     return data
+
+
+def get_player_info(player_id):
+    '''
+    '''
+    query = '''
+            SELECT SUM(total) AS total_points,
+                   SUM(CASE WHEN BASIC_POINTS = 1
+                            THEN 1 ELSE 0 END) AS win_cnt,
+                   SUM(CASE WHEN BASIC_POINTS IS NULL
+                            THEN 1 ELSE 0 END) AS draw_cnt,
+                   SUM(CASE WHEN BASIC_POINTS = -1
+                            THEN 1 ELSE 0 END) AS lose_cnt,
+                   COUNT(round) as round_cnt
+            FROM SCORES
+            WHERE PLAYER_ID = {}
+            '''.format(player_id)
+
+    data = utils.run_sql_query(query).to_json(orient='records')
+
+    return data
