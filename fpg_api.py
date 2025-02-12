@@ -1,4 +1,6 @@
 from flask import Flask, request
+from flask_httpauth import HTTPBasicAuth
+import os
 
 import Players
 import Round
@@ -12,6 +14,24 @@ import Teams
 import utils
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+USER_DATA = {
+    os.environ.get('api_username'): os.environ.get('api_admin')
+}
+
+
+@auth.verify_password
+def verify(username, password):
+    '''
+    '''
+    # print(username)
+    # print(password)
+    # print(USER_DATA.get(username))
+    if not (username, password):
+        return False
+
+    return USER_DATA.get(username) == password
 
 
 @app.route('/get_score', methods=['POST'])
@@ -126,6 +146,7 @@ def calculate_scores():
 
 
 @app.route('/get_round_info', methods=['GET'])
+@auth.login_required
 def get_round_info():
     '''
     '''
@@ -147,6 +168,7 @@ def get_round_info():
 
 
 @app.route('/get_choices', methods=['GET'])
+@auth.login_required
 def get_choices():
     '''
     '''
@@ -165,6 +187,7 @@ def get_choices():
 
 
 @app.route('/init_player', methods=['GET'])
+@auth.login_required
 def init_player():
     '''
     '''
@@ -178,6 +201,7 @@ def init_player():
 
 
 @app.route('/engine', methods=['GET'])
+@auth.login_required
 def engine():
     '''
     '''
@@ -187,6 +211,7 @@ def engine():
 
 
 @app.route('/get_fixtures', methods=['GET'])
+@auth.login_required
 def get_fixtures():
     '''
     '''
@@ -203,6 +228,7 @@ def get_fixtures():
 
 
 @app.route('/get_available_choices', methods=['GET'])
+@auth.login_required
 def get_available_choices():
     '''
     '''
@@ -214,6 +240,7 @@ def get_available_choices():
 
 
 @app.route('/current_round', methods=['GET'])
+@auth.login_required
 def get_current_round():
     '''
     '''
@@ -230,6 +257,7 @@ def get_current_round():
 
 
 @app.route('/get_standings', methods=['GET'])
+@auth.login_required
 def get_standings():
     '''
     '''
@@ -246,6 +274,7 @@ def get_standings():
 
 
 @app.route('/get_points', methods=['GET'])
+@auth.login_required
 def get_points():
     '''
     '''
@@ -264,6 +293,7 @@ def get_points():
 
 
 @app.route('/get_rolling_standings', methods=['GET'])
+@auth.login_required
 def get_rolling_standings():
     '''
     '''
@@ -280,6 +310,7 @@ def get_rolling_standings():
 
 
 @app.route('/get_previous_choices', methods=['GET'])
+@auth.login_required
 def get_previous_choices():
     '''
     '''
@@ -293,6 +324,7 @@ def get_previous_choices():
 
 
 @app.route('/get_previous_points', methods=['GET'])
+@auth.login_required
 def get_previous_points():
     '''
     '''
@@ -306,6 +338,7 @@ def get_previous_points():
 
 
 @app.route('/get_player_info', methods=['GET'])
+@auth.login_required
 def get_player_info():
     '''
     '''
@@ -323,6 +356,7 @@ def get_player_info():
 
 
 @app.route('/make_choice', methods=['POST'])
+@auth.login_required
 def make_choice():
     '''
     '''
@@ -340,6 +374,7 @@ def make_choice():
 
 
 @app.route('/update_choice', methods=['POST'])
+@auth.login_required
 def update_choice():
     '''
     '''

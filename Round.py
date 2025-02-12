@@ -50,9 +50,7 @@ def get_round_info(round_id):
             WHERE ROUND = {}
             LIMIT 1
             '''.format(round_id)
-
     data = utils.run_sql_query(query)
-
     doubled = bool(data['DP_ROUND'][0])
     dmm = bool(data['DMM_ROUND'][0])
     cut_off = data['CUT_OFF'][0]
