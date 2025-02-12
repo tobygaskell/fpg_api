@@ -44,4 +44,4 @@ def save_log(round_id, collected, calculated, configured, emailed):
             (CURRENT_TIMESTAMP(2), {}, {}, {}, {}, {})
             '''.format(round_id, collected, calculated, configured, emailed)
 
-    utils.run_sql_query(query, True)
+    utils.run_sql_query(query, True) 
