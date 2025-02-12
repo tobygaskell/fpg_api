@@ -163,3 +163,4 @@ cython_debug/
 
 test.py
 nohup.out
+wsgi.py
