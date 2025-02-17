@@ -93,7 +93,7 @@ def get_standings():
             SELECT distinct c.player_id, r.round, r.fixture_id,
                 team_choice, home_team, away_team, home_goals,
                 away_goals,  home_goals - away_goals as GD
-            from RESULTS r
+            from (SELECT DISTINCT * FROM RESULTS WHERE game_status = 'Match Finished') r 
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
             left join CHOICES c
@@ -107,7 +107,7 @@ def get_standings():
             select distinct c.player_id, r.round, r.fixture_id,
                 team_choice, home_team, away_team, home_goals,
                 away_goals, away_goals - home_goals as GD
-            from RESULTS r
+            from (SELECT DISTINCT * FROM RESULTS WHERE game_status = 'Match Finished') r 
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
             left join CHOICES c
