@@ -33,6 +33,13 @@ def init_round(round_id):
 
         utils.run_sql_query(query, True)
 
+        query = '''
+                UPDATE CURRENT_ROUND
+                SET ROUND_ID = ROUND_ID + 1
+                '''
+
+        utils.run_sql_query(query, True)
+
         init = True
 
     else:
@@ -73,8 +80,8 @@ def get_current_round(method='sql'):
 
     elif method == 'sql':
         query = '''
-                SELECT MAX(ROUND) as current_round
-                FROM LOGS
+                SELECT MAX(ROUND_ID) as current_round
+                FROM CURRENT_ROUND
                 '''
 
         round_id = utils.run_sql_query(query)['current_round'][0]
@@ -88,14 +95,12 @@ def round_changed(round_id):
     changed = False
 
     query = '''
-            SELECT DISTINCT ROUND
-            FROM LOGS
-            WHERE TIME_ADDED = (SELECT MAX(TIME_ADDED) FROM LOGS)
-            LIMIT 1
+            SELECT MAX(ROUND_ID) as ROUND
+            FROM CURRENT_ROUND
             '''
     last_round_id = int(utils.run_sql_query(query)['ROUND'][0])
 
-    if last_round_id != int(round_id):
+    if last_round_id == int(round_id) -1:
         changed = True
 
     return changed, last_round_id
