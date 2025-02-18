@@ -1,0 +1,26 @@
+Get the choices for the round id provided.
+---
+parameters:
+  - name: round_id
+    in: query
+    type: integer
+    required: true
+    description: The round id you want the choices for test test test.
+    example: 10
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player id you want the choices for.
+    example: 6
+responses:
+  200:
+    description: A dictionary with player IDs as keys and their choices as values.
+    schema:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        6: "Brentford"
+        7: "Brentford"
+        8: "Manchester City"
