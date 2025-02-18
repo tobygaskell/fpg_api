@@ -1,0 +1,29 @@
+Get the round information for the round id provided.
+---
+parameters:
+  - name: round_id
+    in: query
+    type: integer
+    required: true
+    description: The round id you want the information for.
+responses:
+  200:
+    description: The round information for the round id provided.
+    schema:
+      properties:
+        Round:
+          type: integer
+          description: The round id returned for use.
+          example: 10
+        Double:
+          type: boolean
+          description: If the round is a Double Round.
+          example: false
+        DMM:
+          type: boolean
+          description: If the round is a Draw Means More round.
+          example: true
+        Cut Off:
+          type: string
+          description: The time which no more picks can be made after.
+          example: 2024-08-24 12:30:00

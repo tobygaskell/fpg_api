@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
+from flasgger import Swagger, swag_from
 import os
 
 import Players
@@ -15,6 +16,28 @@ import utils
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
+
+swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "FPG API",
+        "description": "API documentation for the FPG application",
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {},
+    "definitions": {},
+    "securityDefinitions": {
+        "basicAuth": {
+            "type": "basic"
+        }
+    }
+}
+swagger = Swagger(app, template=swagger_template)
 
 USER_DATA = {
     os.environ.get('api_username'): os.environ.get('api_admin')
@@ -144,6 +167,7 @@ def calculate_scores():
 
 @app.route('/get_round_info', methods=['GET'])
 # @auth.login_required
+@swag_from('swagger/get_round_info.yml')
 def get_round_info():
     '''
     '''
@@ -166,6 +190,7 @@ def get_round_info():
 
 @app.route('/get_choices', methods=['GET'])
 # @auth.login_required
+@swag_from('swagger/get_choices.yml')
 def get_choices():
     '''
     '''
