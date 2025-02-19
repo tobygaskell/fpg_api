@@ -1,10 +1,10 @@
-Get the current round information
+Get the current Round ID
 ---
-description: Returns the current round ID. Optionally, you can provide a player ID.
+description: Returns the current round ID.
 parameters:
   - name: player_id
     in: query
-    description: ID of the player for whom is making the call
+    description: Player ID of the player making the call.
     required: false
     type: integer
 responses:

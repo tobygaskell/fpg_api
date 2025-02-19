@@ -24,7 +24,7 @@ swagger_template = {
     },
     "basePath": "/",
     "schemes": [
-        "http",
+        # "http",
         "https"
     ],
     "paths": {},
