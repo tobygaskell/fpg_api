@@ -1,0 +1,34 @@
+Submit a weekly choice
+---
+description: This endpoint allows you to post the weekly choice to the database.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: Choice data
+    required: true
+    schema:
+      type: object
+      properties:
+        Choice:
+          type: string
+          example: Manchester United
+        Player:
+          type: integer
+          example: 3
+        Round:
+          type: integer
+          example: 10
+responses:
+  200:
+    description: Successful operation
+    schema:
+      type: object
+      properties:
+        Submitted:
+          type: string
+          enum: [Too Late, Already Chosen, True]
+          example: True

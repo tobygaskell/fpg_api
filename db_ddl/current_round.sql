@@ -1,0 +1,3 @@
+CREATE OR REPLACE TABLE FPG.CURRENT_ROUND (
+    ROUND               INT
+);

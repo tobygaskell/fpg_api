@@ -24,7 +24,9 @@ def init_results(round):
         teams.append(results['response'][i]['teams']['home'])
         teams.append(results['response'][i]['teams']['away'])
 
-        if results['response'][i]['fixture']['status']['long'] == 'Match Finished':
+        match_status = results['response'][i]['fixture']['status']['long']
+
+        if match_status == 'Match Finished':
             if len([i['name'] for i in teams if i['winner']]) == 1:
                 winner = [i['name'] for i in teams if i['winner']][0]
 
@@ -93,7 +95,9 @@ def get_standings():
             SELECT distinct c.player_id, r.round, r.fixture_id,
                 team_choice, home_team, away_team, home_goals,
                 away_goals,  home_goals - away_goals as GD
-            from (SELECT DISTINCT * FROM RESULTS WHERE game_status = 'Match Finished') r 
+            from (SELECT DISTINCT *
+                  FROM RESULTS
+                  WHERE game_status = 'Match Finished') r
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
             left join CHOICES c
@@ -107,7 +111,9 @@ def get_standings():
             select distinct c.player_id, r.round, r.fixture_id,
                 team_choice, home_team, away_team, home_goals,
                 away_goals, away_goals - home_goals as GD
-            from (SELECT DISTINCT * FROM RESULTS WHERE game_status = 'Match Finished') r 
+            from (SELECT DISTINCT *
+                  FROM RESULTS
+                  WHERE game_status = 'Match Finished') r
             left join FIXTURES f
             on r.FIXTURE_ID  = f.FIXTURE_ID
             left join CHOICES c

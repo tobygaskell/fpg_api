@@ -1,0 +1,34 @@
+Get player standings
+---
+description: Returns the standings of players.
+parameters:
+  - name: player_id
+    in: query
+    description: ID of the player
+    required: false
+    type: integer
+    format: int64
+    example: 6
+responses:
+  200:
+    description: A list of player standings
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          Position:
+            type: integer
+            example: 1
+          player_id:
+            type: integer
+            example: 11
+          User:
+            type: string
+            example: "XXXXX"
+          Goal Diff:
+            type: integer
+            example: 7
+          Score:
+            type: integer
+            example: 4

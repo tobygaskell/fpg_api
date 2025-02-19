@@ -1,0 +1,25 @@
+Get available choices for a player
+---
+description: Returns an array of dictionaries with team names for a given player ID
+parameters:
+  - name: player_id
+    in: query
+    required: true
+    type: string
+    description: The ID of the player
+responses:
+  200:
+    description: A list of available choices
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          TEAM_NAME:
+            type: string
+            example: "Team A"
+    examples:
+      application/json:
+        - TEAM_NAME: Manchester United
+        - TEAM_NAME: Brentford
+        - TEAM_NAME: Chelsea

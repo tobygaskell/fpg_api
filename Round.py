@@ -100,7 +100,7 @@ def round_changed(round_id):
             '''
     last_round_id = int(utils.run_sql_query(query)['ROUND'][0])
 
-    if last_round_id == int(round_id) -1:
+    if last_round_id == int(round_id) - 1:
         changed = True
 
     return changed, last_round_id
