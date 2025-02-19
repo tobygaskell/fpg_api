@@ -1,12 +1,12 @@
-Get available choices for a player
+Get available choices left for a player
 ---
-description: Returns an array of dictionaries with team names for a given player ID
+description: Returns an array of dictionaries with team names of the teams still available to pick for a given player
 parameters:
   - name: player_id
     in: query
     required: true
     type: string
-    description: The ID of the player
+    description: The ID of the player you want the avialable choices for
 responses:
   200:
     description: A list of available choices

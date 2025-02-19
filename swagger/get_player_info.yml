@@ -1,4 +1,4 @@
-Get player information
+Get some info about the player including number of wins predicted etc
 ---
 parameters:
   - in: query

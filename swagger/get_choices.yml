@@ -1,17 +1,17 @@
-Get the choices for the round id provided.
+Get the choices made by the players for the given round.
 ---
 parameters:
   - name: round_id
     in: query
     type: integer
     required: true
-    description: The round id you want the choices for test test test.
+    description: The round id for the round you want to see the choices for.
     example: 10
   - name: player_id
     in: query
     type: integer
     required: false
-    description: The player id you want the choices for.
+    description: The player id for whom is making the call.
     example: 6
 responses:
   200:
