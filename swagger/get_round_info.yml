@@ -6,6 +6,11 @@ parameters:
     type: integer
     required: true
     description: The round id you want the information for.
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player id for whom is making the call.
 responses:
   200:
     description: The round information for the round id provided.

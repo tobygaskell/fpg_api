@@ -1,0 +1,85 @@
+Returns the prem fixtures for a given round.
+---
+parameters:
+  - name: round_id
+    in: query
+    type: integer
+    required: true
+    description: The round id you want the fixtures for.
+    example: 10
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player_id for whom the request is coming from - used to insert into the logs.
+    example: 6
+responses:
+  200:
+    description: A list of fixtures for the round id provided.
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          FIXTURE_ID:
+            type: integer
+            description: The ID of the fixture.
+            example: 1208082
+          HOME_TEAM:
+            type: string
+            description: The name of the home team.
+            example: Aston Villa
+          AWAY_TEAM:
+            type: string
+            description: The name of the away team.
+            example: Manchester United
+          KICKOFF:
+            type: integer
+            description: The kickoff time in milliseconds since epoch.
+            example: 1728219600000
+          LOCATION:
+            type: string
+            description: The location of the fixture.
+            example: Villa Park
+          ROUND:
+            type: integer
+            description: The round number.
+            example: 7
+          SEASON:
+            type: integer
+            description: The season year.
+            example: 2024
+          DERBY:
+            type: integer
+            description: Indicates if the fixture is a derby (0 or 1).
+            example: 0
+          HOME_LOGO:
+            type: string
+            description: The URL of the home team's logo.
+            example: https://media.api-sports.io/football/teams/66.png
+          AWAY_LOGO:
+            type: string
+            description: The URL of the away team's logo.
+            example: https://media.api-sports.io/football/teams/33.png
+    examples:
+      application/json:
+        - FIXTURE_ID: 1208082
+          HOME_TEAM: Aston Villa
+          AWAY_TEAM: Manchester United
+          KICKOFF: 1728219600000
+          LOCATION: Villa Park
+          ROUND: 7
+          SEASON: 2024
+          DERBY: 0
+          HOME_LOGO: https://media.api-sports.io/football/teams/66.png
+          AWAY_LOGO: https://media.api-sports.io/football/teams/33.png
+        - FIXTURE_ID: 1208083
+          HOME_TEAM: Liverpool
+          AWAY_TEAM: Chelsea
+          KICKOFF: 1728223200000
+          LOCATION: Anfield
+          ROUND: 7
+          SEASON: 2024
+          DERBY: 1
+          HOME_LOGO: https://media.api-sports.io/football/teams/40.png
+          AWAY_LOGO: https://media.api-sports.io/football/teams/49.png

@@ -1,0 +1,39 @@
+Get player information
+---
+parameters:
+  - in: query
+    name: player_id
+    required: true
+    schema:
+      type: string
+    description: The ID of the player
+responses:
+  200:
+    description: Successful response
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          total_points:
+            type: integer
+            nullable: true
+          win_cnt:
+            type: integer
+            nullable: true
+          draw_cnt:
+            type: integer
+            nullable: true
+          lose_cnt:
+            type: integer
+            nullable: true
+          round_cnt:
+            type: integer
+            example: 0
+    examples:
+      application/json:
+        - total_points: 23
+          win_cnt: 11
+          draw_cnt: 4
+          lose_cnt: 5
+          round_cnt: 20
