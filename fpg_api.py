@@ -231,6 +231,25 @@ def get_round_info():
             'Cut Off': cut_off}
 
 
+@app.route('/get_round_results', methods=['GET'])
+@swag_from('swagger/get_round_results.yml')
+def get_round_results():
+    '''
+    '''
+    round_id = request.args.get('round_id')
+
+    try:
+        player_id = request.args.get('player_id')
+    except BaseException:
+        player_id = None
+
+    results = Results.get_round_results(round_id)
+
+    utils.log_call(player_id, 'get_round_results')
+
+    return results
+
+
 @app.route('/get_standings', methods=['GET'])
 @swag_from('swagger/get_standings.yml')
 def get_standings():
