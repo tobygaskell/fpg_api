@@ -3,3 +3,6 @@ yagmail
 requests
 pandas
 SQLAlchemy
+flash_httpauth
+flasgger
+mysql-connector-python

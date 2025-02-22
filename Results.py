@@ -241,3 +241,16 @@ on stand.player_id = t.player_id and stand.round = t.round;
     data = utils.run_sql_query(query)
 
     return data.to_json(orient='records')
+
+
+def get_round_results(round_id):
+    '''
+    '''
+    query = '''
+            SELECT DISTINCT *
+            FROM RESULTS
+            WHERE ROUND = {}
+            AND GAME_STATUS = 'Match Finished'
+            '''.format(round_id)
+
+    return utils.run_sql_query(query).to_json(orient='records')

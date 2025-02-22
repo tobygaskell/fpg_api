@@ -1,0 +1,48 @@
+Get the results from the games in a given round.
+---
+parameters:
+  - name: round_id
+    in: query
+    type: integer
+    required: true
+    description: The round id for the round you want to see the game results from for.
+    example: 10
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player id for whom is making the call.
+    example: 6
+responses:
+  200:
+    description: The round information for the round id provided.
+    schema:
+      properties:
+        FIXTURE_ID:
+          type: integer
+          description: The fixtiure id of the game.
+          example: 23445403
+        GAME_STATUS:
+          type: string
+          description: The status of the game at the time of the fixtures being pulled.
+          example: "Match Finished"
+        ROUND:
+          type: integer
+          description: The round_id for the games you want the fixtures for
+          example: 10
+        HOME_GOALS:
+          type: int
+          description: How many goals the home team scored
+          example: 6
+        AWAY_GOALS:
+          type: int
+          description: How many goals the away team scored
+          example: 1
+        SCORE:
+          type: string
+          description: The score of the game
+          example: "2-1"
+        WINNER:
+          type: string
+          description: Name of the team who won the game 'draw' in the case of a draw.
+          example: "Manchester United"
