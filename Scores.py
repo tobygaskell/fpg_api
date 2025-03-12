@@ -183,8 +183,8 @@ def get_season_overview(player_id):
     query = '''
             SELECT PLAYER_ID,
                    ROUND,
-                   BASIC_POINTS as RESULT,
-                   TOTAL as POINTS
+                   COALESCE(BASIC_POINTS, 0) as RESULT,
+                   COALESCE(TOTAL, 0) as POINTS
             FROM SCORES
             WHERE player_id = {}
             ORDER BY ROUND;
