@@ -181,14 +181,28 @@ def get_season_overview(player_id):
     '''
     '''
     query = '''
+            WITH a AS (
+                SELECT ROW_NUMBER() OVER (ORDER BY '1') AS round
+                FROM CALL_LOGS cl
+                LIMIT 38),
+
+            b AS (
             SELECT PLAYER_ID,
                    ROUND,
-                   COALESCE(BASIC_POINTS, 0) as RESULT,
-                   COALESCE(TOTAL, 0) as POINTS
-            FROM SCORES
-            WHERE player_id = {}
-            ORDER BY ROUND;
-            '''.format(player_id)
+                   COALESCE(BASIC_POINTS, 0) AS RESULT,
+                   COALESCE(TOTAL, 0) AS POINTS
+            FROM SCORES AS s
+            WHERE player_id = {})
+
+            SELECT a.round,
+                COALESCE(b.player_id, {}) AS player_id,
+                b.result,
+                b.points
+            FROM a
+            LEFT JOIN b
+            ON a.round = b.round
+            ORDER BY a.ROUND;
+            '''.format(player_id, player_id)
 
     season_overview = utils.run_sql_query(query)
 
