@@ -175,3 +175,21 @@ def get_points(round_id):
     points = utils.run_sql_query(query)
 
     return points.to_json(orient='records')
+
+
+def get_season_overview(player_id):
+    '''
+    '''
+    query = '''
+            SELECT PLAYER_ID,
+                   ROUND,
+                   BASIC_POINTS as RESULT,
+                   TOTAL as POINTS
+            FROM SCORES
+            WHERE player_id = {}
+            ORDER BY ROUND;
+            '''.format(player_id)
+
+    season_overview = utils.run_sql_query(query)
+
+    return season_overview.to_json(orient='records')

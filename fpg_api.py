@@ -250,6 +250,20 @@ def get_round_results():
     return results
 
 
+@app.route('/get_season_overview', methods=['GET'])
+@swag_from('swagger/get_season_overview.yml')
+def get_season_overview():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    season_overview = Scores.get_season_overview(player_id)
+
+    utils.log_call(player_id, 'get_season_overview')
+
+    return season_overview
+
+
 @app.route('/get_standings', methods=['GET'])
 @swag_from('swagger/get_standings.yml')
 def get_standings():
