@@ -281,6 +281,21 @@ def get_standings():
     return standings
 
 
+@app.route('/get_weekly_info', methods=['GET'])
+@swag_from('swagger/get_weekly_info.yml')
+def get_weekly_info():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+    round_id = request.args.get('round_id')
+
+    weekly_info = Round.weekly_info(player_id, round_id)
+
+    utils.log_call(player_id, 'get_weekly_info')
+
+    return weekly_info
+
+
 @app.route('/init_player', methods=['GET'])
 @swag_from('swagger/init_player.yml')
 def init_player():
