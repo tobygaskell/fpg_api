@@ -250,6 +250,20 @@ def get_round_results():
     return results
 
 
+@app.route('/get_season_overview', methods=['GET'])
+@swag_from('swagger/get_season_overview.yml')
+def get_season_overview():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    season_overview = Scores.get_season_overview(player_id)
+
+    utils.log_call(player_id, 'get_season_overview')
+
+    return season_overview
+
+
 @app.route('/get_standings', methods=['GET'])
 @swag_from('swagger/get_standings.yml')
 def get_standings():
@@ -265,6 +279,21 @@ def get_standings():
     utils.log_call(player_id, 'get_standings')
 
     return standings
+
+
+@app.route('/get_weekly_info', methods=['GET'])
+@swag_from('swagger/get_weekly_info.yml')
+def get_weekly_info():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+    round_id = request.args.get('round_id')
+
+    weekly_info = Round.weekly_info(player_id, round_id)
+
+    utils.log_call(player_id, 'get_weekly_info')
+
+    return weekly_info
 
 
 @app.route('/init_player', methods=['GET'])

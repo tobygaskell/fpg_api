@@ -1,0 +1,33 @@
+Get the season overview for a given player.
+---
+parameters:
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player id for whom is making the call.
+    example: 6
+responses:
+  200:
+    description: The season overview for the player id provided.
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          PLAYER_ID:
+            type: integer
+            description: The player id of the player whose season overview this is.
+            example: 6
+          ROUND:
+            type: integer
+            description: The round if for that round.
+            example: 10
+          RESULT:
+            type: integer
+            description: 1 if win null if draw -1 if loss.
+            example: 1
+          POINTS:
+            type: int
+            description: How many points that player got that round.
+            example: 2
