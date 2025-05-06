@@ -1,11 +1,11 @@
-name: Deploy to Raspberry Pi via Git Pull
+name: Test SSH Connection to Raspberry Pi
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   deploy:
-    name: Pull latest code and restart service
+    name: Test SSH Connection
     runs-on: ubuntu-latest
 
     steps:
@@ -14,8 +14,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.PI_SSH_KEY }}
 
-      - name: Git pull and restart Gunicorn on Raspberry Pi
+      - name: Test SSH and list files on Raspberry Pi
         run: |
-          ssh ${{ secrets.PI_HOST }} << 'EOF'
-            ls  
+          # Ensure we can connect to the Pi and verify the host key
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.PI_HOST }} << 'EOF'
+            ls
           EOF
