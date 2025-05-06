@@ -1,0 +1,11 @@
+Get all the notification tokens from the DB returned in a list
+---
+description: Returns an array of tokens which can be used to send notifications to the FPG app.
+responses:
+  200:
+    description: A list of all the stored tokens
+    schema:
+      type: array
+      items:
+        type: string
+        example: "sample_token"
