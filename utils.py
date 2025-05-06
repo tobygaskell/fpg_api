@@ -4,6 +4,10 @@ import mysql.connector
 import requests
 from sqlalchemy import create_engine
 import yagmail
+from dotenv import load_dotenv
+
+
+load_dotenv()  # loads from .env by default
 
 
 def connect_sql():
@@ -113,3 +117,16 @@ def log_call(player_id, endpoint):
     run_sql_query(query, True)
 
     return True
+
+
+def log_notification(token, title, body, sound, status):
+    '''
+    '''
+    query = '''
+            INSERT INTO NOTIFICATION_LOGS
+            (token, title, body, sound, status, send_time)
+            VALUES
+            ('{}', '{}', '{}', '{}', '{}', CURRENT_TIMESTAMP(2));
+            '''.format(token, title, body, sound, status)
+
+    run_sql_query(query, True)
