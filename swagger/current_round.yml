@@ -1,6 +1,6 @@
 Get the current Round ID
 ---
-description: Returns the current round ID.
+description: Returns the current round ID. This is a test for the prod deployment using the github action.
 parameters:
   - name: player_id
     in: query
