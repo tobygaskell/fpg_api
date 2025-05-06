@@ -1,0 +1,18 @@
+[project]
+name = "fpg-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.0",
+    "flask-httpauth>=4.8.0",
+    "pandas>=2.2.3",
+    "pytest>=8.3.5",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["test_api"]
+
