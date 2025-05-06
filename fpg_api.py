@@ -419,4 +419,11 @@ def update_choice():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+
+    env = os.getenv('ENV')
+
+    if env == 'uat':
+        app.run(port=5000, host='0.0.0.0')
+
+    elif env == 'local':
+        app.run(debug=True)
