@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -23,7 +24,9 @@ jobs:
 
             cd /home/${{secrets.PI_USER}}/projects/DEVELOP/fpg_api
 
-            git pull origin develop
+            git fetch origin
+            
+            git reset --hard origin/develop
 
             source venv/bin/activate
 
