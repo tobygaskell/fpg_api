@@ -1,7 +1,9 @@
-name: Test SSH Connection to Raspberry Pi
+name: Deploy Production
 
 on:
-  workflow_dispatch: # Allows manual triggering
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
