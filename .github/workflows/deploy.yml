@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Test SSH Connection
+    name: Deploy to Production
     runs-on: ubuntu-latest
 
     steps:
@@ -22,5 +22,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.PI_HOST }} << 'EOF'
             cd projects/fpg_api
             git pull origin main 
+            source venv/bin/activate
+            pip install -r requirements.txt
             sudo systemctl restart fpg
           EOF
