@@ -1,0 +1,21 @@
+name: Deploy to Raspberry Pi via Git Pull
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Pull latest code and restart service
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PI_SSH_KEY }}
+
+      - name: Git pull and restart Gunicorn on Raspberry Pi
+        run: |
+          ssh ${{ secrets.PI_HOST }} << 'EOF'
+            ls  
+          EOF
