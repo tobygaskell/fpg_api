@@ -1,6 +1,0 @@
-CREATE OR REPLACE TABLE FPG.STANDINGS (
-	ROUND               INT,
-	PLAYER_ID           INT,
-	OVERALL_TOTAL       INT,
-	POSITION            INT
-);

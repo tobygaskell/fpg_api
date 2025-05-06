@@ -1,0 +1,45 @@
+name: Deploy Testing
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Deploy to UAT
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PI_SSH_KEY }}
+
+      - name: Test SSH and list files on Raspberry Pi
+        run: |
+          # Ensure we can connect to the Pi and verify the host key
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.PI_HOST }} << 'EOF'
+
+            cd /home/${{secrets.PI_USER}}/projects/DEVELOP/fpg_api
+
+            git pull origin develop
+
+            source venv/bin/activate
+
+            pip install -r requirements.txt
+
+            # Stop existing process
+            if [ -f fpg_uat.pid ] && kill -0 $(cat fpg_uat.pid) 2>/dev/null; then
+                echo "Stopping existing Flask app with PID: $(cat fpg_uat.pid)"
+                kill $(cat fpg_uat.pid)
+                rm fpg_uat.pid
+            else
+                echo "No running process found from PID file"
+            fi
+
+            # Start new process
+            nohup venv/bin/python fpg_api.py > fpg.log 2>&1 &
+            echo $! > fpg_uat.pid
+            echo "New Flask app started with PID: $(cat fpg_uat.pid)"
+          EOF
