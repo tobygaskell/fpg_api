@@ -18,5 +18,7 @@ jobs:
         run: |
           # Ensure we can connect to the Pi and verify the host key
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.PI_HOST }} << 'EOF'
-            ls
+            cd projects/fpg_api
+            git pull origin main 
+            sudo systemctl restart fpg
           EOF
