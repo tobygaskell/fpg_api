@@ -7,3 +7,4 @@ flask_httpauth
 flasgger
 mysql-connector-python
 python-dotenv
+pytest
