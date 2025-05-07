@@ -27,8 +27,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Write .env.test
-        run: echo "${{ secrets.ENV_TEST_FILE }}" > .env.test
+        run: echo "${{ secrets.ENV_TEST_FILE }}" > .env
 
       - name: Run tests
         run: |
-          ENV=test pytest --disable-warnings -q
+          pytest --disable-warnings -q
