@@ -31,4 +31,12 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --disable-warnings -q
+          pytest --tb=short --disable-warnings -v --maxfail=1 --junitxml=test-results.xml
+
+      - if: always()
+        uses: pmeier/pytest-results-action@v0.6.0
+        with:
+          path: test-results.xml
+          summary: true
+          display-options: fEXIT
+          title: "Test Results Toby's"
