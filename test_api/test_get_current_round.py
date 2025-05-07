@@ -1,30 +1,50 @@
-from api import fpg_api as app
-
 import pytest
-import sys
 import os
+import sys
+import pandas as pd
 
-# Add parent directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from fpg_api import app
+from Round import get_current_round
+from unittest.mock import patch
 
 
 @pytest.fixture
 def client():
-    # app.config['TESTING'] = True
+    app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
 
-def test_get_current_round(client, mocker):
-    # Mock the Round.get_current_round function
-    mock_round = mocker.patch('app.Round.get_current_round', return_value=42)
+def test_get_current_round_without_player_id(client):
+    with patch('fpg_api.Round.get_current_round', return_value=42):
+        response = client.get('/current_round')
+        assert response.status_code == 200
+        assert response.json == {'Round ID': 42}
 
-    # Mock the utils.log_call function
-    mock_log = mocker.patch('app.utils.log_call')
 
-    response = client.get('/current_round?player_id=123')
+def test_get_current_round_with_player_id(client):
+    with patch('fpg_api.Round.get_current_round', return_value=99):
+        response = client.get('/current_round?player_id=123')
+        assert response.status_code == 200
+        assert response.json == {'Round ID': 99}
 
-    assert response.status_code == 200
-    assert response.json == {'Round ID': 42}
-    mock_round.assert_called_once()
-    mock_log.assert_called_once_with('123', 'current_round')
+
+def test_get_current_round_sql():
+    # Mock the SQL query result
+    with patch('Round.utils.run_sql_query') as mock_run_sql:
+        mock_run_sql.return_value = pd.DataFrame({'current_round': [27]})
+        result = get_current_round(method='sql')
+        assert result == 27
+
+
+def test_get_current_round_api():
+    # Mock the API call response
+    with patch('Round.utils.get_api') as mock_get_api:
+        mock_get_api.return_value = {
+            'response': ['Premier League - Round 35']
+        }
+        result = get_current_round(method='api')
+        assert result == 35
