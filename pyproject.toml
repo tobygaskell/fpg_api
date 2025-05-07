@@ -1,9 +1,9 @@
 [project]
 name = "fpg-api"
 version = "0.1.0"
-description = "Add your description here"
+description = "This Repo is the link between the FPG Database and the FPG front end"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "flask>=3.1.0",
     "flask-httpauth>=4.8.0",

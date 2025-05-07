@@ -427,3 +427,4 @@ if __name__ == '__main__':
 
     elif env == 'local':
         app.run(debug=True)
+
