@@ -25,12 +25,10 @@ jobs:
             cd /home/${{secrets.PI_USER}}/projects/DEVELOP/fpg_api
 
             git fetch origin
-            
+
             git reset --hard origin/develop
 
-            source venv/bin/activate
-
-            pip install -r requirements.txt
+            uv sync 
 
             # Stop existing process
             if [ -f fpg_uat.pid ] && kill -0 $(cat fpg_uat.pid) 2>/dev/null; then
@@ -42,7 +40,7 @@ jobs:
             fi
 
             # Start new process
-            nohup venv/bin/python fpg_api.py > fpg.log 2>&1 &
+            nohup .venv/bin/python fpg_api.py > fpg.log 2>&1 &
             echo $! > fpg_uat.pid
             echo "New Flask app started with PID: $(cat fpg_uat.pid)"
           EOF

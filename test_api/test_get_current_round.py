@@ -7,7 +7,7 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fpg_api import app
-from Round import get_current_round
+from api.Round import get_current_round
 from unittest.mock import patch
 
 

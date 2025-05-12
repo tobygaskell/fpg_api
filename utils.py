@@ -1,13 +1,11 @@
 import os
 import pandas as pd
 import mysql.connector
-import requests
 from sqlalchemy import create_engine
-import yagmail
 from dotenv import load_dotenv
 
 
-load_dotenv()  # loads from .env by default
+load_dotenv(override=True)  # loads from .env by default
 
 
 def connect_sql():
@@ -51,21 +49,6 @@ def run_sql_query(query, commit=False):
     return data
 
 
-def get_api(url, querystring={}):
-    '''
-    '''
-    headers = {
-        "X-RapidAPI-Key": os.environ.get('api_key'),
-        "X-RapidAPI-Host": os.environ.get('api_host')
-    }
-    response = requests.request("GET",
-                                url,
-                                headers=headers,
-                                params=querystring)
-
-    return response.json()
-
-
 def append_sql(data, table):
     '''
     '''
@@ -88,19 +71,6 @@ def append_sql(data, table):
         return False
 
 
-def send_email(email, subject, body):
-    '''
-    '''
-    email_user = os.environ.get('email_user')
-    email_pass = os.environ.get('email_pass')
-
-    yag = yagmail.SMTP(email_user, email_pass)
-
-    yag.send(email, subject, body)
-
-    return True
-
-
 def log_call(player_id, endpoint):
     '''
     Args:
@@ -117,16 +87,3 @@ def log_call(player_id, endpoint):
     run_sql_query(query, True)
 
     return True
-
-
-def log_notification(token, title, body, sound, status):
-    '''
-    '''
-    query = '''
-            INSERT INTO NOTIFICATION_LOGS
-            (token, title, body, sound, status, send_time)
-            VALUES
-            ('{}', '{}', '{}', '{}', '{}', CURRENT_TIMESTAMP(2));
-            '''.format(token, title, body, sound, status)
-
-    run_sql_query(query, True)

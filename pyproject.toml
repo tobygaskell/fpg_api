@@ -5,10 +5,14 @@ description = "This Repo is the link between the FPG Database and the FPG front 
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "dotenv>=0.9.9",
+    "flasgger>=0.9.7.1",
     "flask>=3.1.0",
     "flask-httpauth>=4.8.0",
+    "mysql-connector-python>=9.3.0",
     "pandas>=2.2.3",
     "pytest>=8.3.5",
+    "sqlalchemy>=2.0.40",
 ]
 
 [tool.pytest.ini_options]
