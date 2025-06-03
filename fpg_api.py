@@ -3,13 +3,12 @@ from flask_httpauth import HTTPBasicAuth
 from flasgger import Swagger, swag_from
 import os
 
-import Players
-import Round
-import Results
-import Scores
-import Engine
-import Choices
-import Fixtures
+import api.Players as Players
+import api.Round as Round
+import api.Results as Results
+import api.Scores as Scores
+import api.Choices as Choices
+import api.Fixtures as Fixtures
 import utils
 # import Notifications
 from dotenv import load_dotenv
@@ -61,7 +60,7 @@ def verify(username, password):
 def index():
     '''
     '''
-    return 'FPG API - V1.0.0 - RUNNING!'
+    return 'FPG API - V1.0.0 - RUNNING ON {}'.format(os.getenv('HOSTNAME'))
 
 
 @app.route('/current_round', methods=['GET'])
@@ -69,26 +68,26 @@ def index():
 def get_current_round():
     '''
     '''
-    round_id = Round.get_current_round()
-
     try:
         player_id = request.args.get('player_id')
     except BaseException:
         player_id = None
+
+    round_id = Round.get_current_round()
 
     utils.log_call(player_id, 'current_round')
 
     return {'Round ID': round_id}
 
 
-@app.route('/engine', methods=['GET'])
-@auth.login_required
-def engine():
-    '''
-    '''
-    Engine.main()
+# @app.route('/engine', methods=['GET'])
+# @auth.login_required
+# def engine():
+#     '''
+#     '''
+#     Engine.main()
 
-    return {'Everyday Ran': True}
+#     return {'Everyday Ran': True}
 
 
 # @app.route('/get_all_tokens', methods=['GET'])
@@ -400,24 +399,6 @@ def update_choice():
 #     return {'Notifications initialised': init}
 
 
-# @app.route('/log_notification', methods=['POST'])
-# # @swag_from('swagger/log_notification.yml')
-# def log_notification():
-#     '''
-#     '''
-#     request_data = request.get_json()
-
-#     token = request_data['to']
-#     title = request_data['title']
-#     body = request_data['body']
-#     sound = request_data['sound']
-#     status = request_data['send_status']
-
-#     utils.log_notification(token, title, body, sound, status)
-
-#     return True
-
-
 if __name__ == '__main__':
 
     env = os.getenv('ENV')
@@ -427,4 +408,3 @@ if __name__ == '__main__':
 
     elif env == 'local':
         app.run(debug=True)
-

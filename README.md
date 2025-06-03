@@ -1,24 +1,44 @@
-# fpg_api
-This is a backend API for the FPG app
+# FPG API
 
-## Useful commands on how to run this
-```ps aux | grep fpg``` -- This will show you if the api is running in the background on the server  
+This is a backend API for the FPG app. It is the link between the front end and the database.
 
-```nohup venv/bin/python fpg_develop_api.py &``` -- This will run the api in the background of the server  
+## API Docs
 
-```cat nohup.out``` -- This will allow you to see the output of the api
+Documentation and endpoint testing can be found [here.](http://127.0.0.1:5000/apidocs/#)
 
-## Endpoints 
-- get_round_info
-- get_choices
-- init_player
-- engine
-- get_fixtures
-- get_available_choices
+## Release Pattern
+
+![alt text](image-1.png)
+
+## Endpoints
+
+#### GET
+
 - current_round
-- get_standings
+- get_available_choices
+- get_choices
+- get_fixtures
+- get_player_info
 - get_points
-- get_rolling_standings
 - get_previous_choices
+- get_previous_points
+- get_rolling_standings
+- get_round_info
+- get_round_results
+- get_season_overview
+- get_standings
+- get_weekly_info
+- init_player
+
+#### POST
+
 - make_choice
 - update_choice
+
+## Useful commands
+
+`ps aux | grep fpg` -- This will show you if the api is running in the background on the server
+
+`nohup venv/bin/python fpg_api.py &` -- This will run the api in the background of the server
+
+`cat nohup.out` -- This will allow you to see the output of the api
