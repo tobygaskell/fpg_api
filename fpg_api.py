@@ -18,6 +18,8 @@ load_dotenv()
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
+schemes = os.environ.get('schemes') if os.environ.get('schemes') else 'https'
+
 swagger_template = {
     "swagger": "2.0",
     "info": {
@@ -26,7 +28,7 @@ swagger_template = {
         "version": "1.0.0"
     },
     "basePath": "/",
-    "schemes": [os.environ.get('schemes')],
+    "schemes": [schemes],
     "paths": {},
     "definitions": {},
     "securityDefinitions": {
@@ -397,14 +399,3 @@ def update_choice():
 #     utils.log_call(player_id, 'init_notifications')
 
 #     return {'Notifications initialised': init}
-
-
-if __name__ == '__main__':
-
-    env = os.getenv('ENV')
-
-    if env == 'uat':
-        app.run(port=5000, host='0.0.0.0')
-
-    elif env == 'local':
-        app.run(debug=True)
