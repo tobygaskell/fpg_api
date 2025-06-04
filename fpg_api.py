@@ -62,7 +62,7 @@ def verify(username, password):
 def index():
     '''
     '''
-    return 'FPG API - V1.0.0 - RUNNING ON {}'.format(os.getenv('HOSTNAME'))
+    return 'FPG API - V1.0.1 - RUNNING ON {}'.format(os.getenv('HOSTNAME'))
 
 
 @app.route('/current_round', methods=['GET'])
