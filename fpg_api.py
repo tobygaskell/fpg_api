@@ -128,7 +128,12 @@ def get_choices():
     except BaseException:
         player_id = None
 
-    data = Choices.get_choices(round_id)
+    try:
+        inc_method = request.args.get('inc_method')
+    except BaseException:
+        inc_method = False
+
+    data = Choices.get_choices(round_id, inc_method)
 
     utils.log_call(player_id, 'get_choices')
 
