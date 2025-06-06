@@ -42,3 +42,10 @@ Documentation and endpoint testing can be found [here.](http://127.0.0.1:5000/ap
 `nohup venv/bin/python fpg_api.py &` -- This will run the api in the background of the server
 
 `cat nohup.out` -- This will allow you to see the output of the api
+
+### To Gracefully restart the deployment after the docker image is updated
+
+```
+kubectl rollout restart deployment fpg-api -n testing
+kubectl rollout restart deployment fpg-api -n prod
+```
