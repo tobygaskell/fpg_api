@@ -3,7 +3,7 @@ import api.Round as Round
 from datetime import datetime
 
 
-def get_choices(round_id):
+def get_choices(round_id, inc_method=False):
     '''
     This Function will get the already chosen teams from the
     database and return them in a python dictionary
@@ -17,15 +17,19 @@ def get_choices(round_id):
         team choice as the value
     '''
     query = '''
-            SELECT PLAYER_ID, TEAM_CHOICE, ROUND
+            SELECT PLAYER_ID, TEAM_CHOICE, ROUND, METHOD
             FROM CHOICES
             WHERE ROUND = {}
             '''.format(round_id)
 
     choices = utils.run_sql_query(query)
-
-    choices_dict = {row['PLAYER_ID']: row['TEAM_CHOICE'] for _,
-                    row in choices.iterrows()}
+    if inc_method:
+        choices_dict = {row['PLAYER_ID']: {'Choice': row['TEAM_CHOICE'],
+                                           'Method': row['METHOD']} for _,
+                        row in choices.iterrows()}
+    else:
+        choices_dict = {row['PLAYER_ID']: row['TEAM_CHOICE'] for _,
+                        row in choices.iterrows()}
 
     return choices_dict
 
