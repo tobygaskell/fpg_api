@@ -13,14 +13,36 @@ parameters:
     required: false
     description: The player id for whom is making the call.
     example: 6
+  - name: inc_method
+    in: query
+    type: boolean
+    required: False
+    description: Whether or not to include the choice method in the response.
+    default: False
+    example: False
 responses:
   200:
     description: A dictionary with player IDs as keys and their choices as values.
     schema:
       type: object
       additionalProperties:
-        type: string
+        type: object
+        properties:
+          Choice:
+            type: string
+            description: The name of the team chosen by the player.
+            example: "Manchester United"
+          Method:
+            type: string
+            description: The method used for the choice (e.g., "Picked", "Assigned").
+            example: "Picked"
       example:
-        6: "Brentford"
-        7: "Brentford"
-        8: "Manchester City"
+        6: 
+          Choice: "Brentford"
+          Method: "Picked"
+        7: 
+          Choice: "Brentford"
+          Method: "Picked"
+        8: 
+          Choice: "Manchester City"
+          Method: "Assigned"

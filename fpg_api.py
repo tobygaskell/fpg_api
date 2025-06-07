@@ -130,6 +130,7 @@ def get_choices():
 
     try:
         inc_method = request.args.get('inc_method')
+        inc_method = inc_method.lower() == 'true'
     except BaseException:
         inc_method = False
 
