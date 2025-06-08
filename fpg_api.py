@@ -9,8 +9,9 @@ import api.Results as Results
 import api.Scores as Scores
 import api.Choices as Choices
 import api.Fixtures as Fixtures
+import api.Notifications as Notifications
 import utils
-# import Notifications
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -82,26 +83,20 @@ def get_current_round():
     return {'Round ID': round_id}
 
 
-# @app.route('/engine', methods=['GET'])
-# @auth.login_required
-# def engine():
-#     '''
-#     '''
-#     Engine.main()
+@app.route('/deactivate_notifications', methods=['GET'])
+@swag_from('swagger/deactivate_notifications.yml')
+def deactivate_notifications():
+    '''
+    '''
+    player_id = request.args.get('player_id')
 
-#     return {'Everyday Ran': True}
+    token = request.args.get('token')
 
+    utils.log_call(player_id, 'deactivate_notifications')
 
-# @app.route('/get_all_tokens', methods=['GET'])
-# @swag_from('swagger/get_all_tokens.yml')
-# def get_all_tokens():
-#     '''
-#     '''
-#     utils.log_call(None, get_all_tokens)
+    data = Notifications.deactivate_notifications(token, player_id)
 
-#     data = Notifications.get_all_tokens()
-
-#     return data
+    return {'Notifications deactivated': data}
 
 
 @app.route('/get_available_choices', methods=['GET'])
@@ -156,18 +151,6 @@ def get_fixtures():
     utils.log_call(player_id, 'get_fixtures')
 
     return Fixtures.get_fixtures(round_id)
-
-
-# @app.route('/get_missing_pick_tokens', methods=['GET'])
-# # @swag_from('swagger/get_missing_pick_tokens.yml')
-# def get_missing_pick_tokens():
-#     '''
-#     '''
-#     data = Notifications.get_missing_pick_tokens()
-
-#     utils.log_call(None, 'get_missing_pick_tokens')
-
-#     return data
 
 
 @app.route('/get_player_info', methods=['GET'])
@@ -390,18 +373,19 @@ def update_choice():
     return {'Updated': updated}
 
 
-# @app.route('/init_notifications', methods=['POST'])
-# # @swag_from('swagger/init_notifications.yml')
-# def init_notifications():
-#     '''
-#     '''
-#     request_data = request.get_json()
+@app.route('/init_notifications', methods=['POST'])
+@swag_from('swagger/init_notifications.yml')
+def init_notifications():
+    '''
+    '''
+    request_data = request.get_json()
 
-#     player_id = request_data['player_id']
-#     token = request_data['token']
+    player_id = request_data['player_id']
 
-#     init = Notifications.init_notifications(player_id, token)
+    token = request_data['token']
 
-#     utils.log_call(player_id, 'init_notifications')
+    init = Notifications.init_notifications(player_id, token)
 
-#     return {'Notifications initialised': init}
+    utils.log_call(player_id, 'init_notifications')
+
+    return {'Notifications initialised': init}
