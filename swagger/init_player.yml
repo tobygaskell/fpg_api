@@ -1,5 +1,6 @@
-Endpoint to initialise a player in the database, will take a player email and if that email exists will return the player ID if not it will create a new player and return the new player ID.
+Endpoint to initialise a player in the database
 ---
+description: Will take a player email and if that email exists will return the player ID if not it will create a new player and return the new player ID.
 parameters:
   - name: email
     in: query
