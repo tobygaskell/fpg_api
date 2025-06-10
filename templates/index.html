@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FPG API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1f2937;
+      --accent: #2563eb;
+      --muted: #6b7280;
+      --mono: 'SFMono-Regular', Menlo, Consolas, monospace;
+      --radius: 10px;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: #f9fafb;
+      padding: 2rem 1rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    header p {
+      color: var(--muted);
+      margin: 0.5rem 0 1rem;
+    }
+
+    .version {
+      display: inline-block;
+      background: #e5e7eb;
+      color: #374151;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.3rem;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    table th, table td {
+      border: 1px solid #e5e7eb;
+      padding: 0.75rem;
+    }
+
+    table th {
+      background: #f3f4f6;
+      text-align: left;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 4rem 0 1rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      table, pre {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FPG API</h1>
+    <p>Fantasy game engine powering picks, scoring, and strategy</p>
+    <div class="version">V1.0.1 &mdash; Host: {{ hostname }}</div>
+  </header>
+
+  <main>
+    <section>
+      <h2>🚀 Quick Start</h2>
+      <pre><code id="curl">curl https://fpg-app.com/current_round -X GET </code></pre>
+    </section>
+
+    <section>
+      <h2>📚 Documentation</h2>
+      <p>View full Swagger <a href="/apidocs">documentation</a>.</p>
+    </section>
+
+    <section>
+      <h2>🧑‍💻 Website</h2>
+      <p>Chech out our <a href="https://www.info.fpg-app.com">website</a>.</p>
+    </section>
+
+    <section>
+      <h2>📌 Endpoints</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Endpoint</th>
+            <th>Method</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>/current_round</td><td>GET</td><td>Get current round</td></tr>
+          <tr><td>/deactivate_notifications</td><td>GET</td><td>Deactivate notifications</td></tr>
+          <tr><td>/get_available_choices</td><td>GET</td><td>Get available choices</td></tr>
+          <tr><td>/get_choices</td><td>GET</td><td>Get choices for a round</td></tr>
+          <tr><td>/get_fixtures</td><td>GET</td><td>Get fixtures for a round</td></tr>
+          <tr><td>/get_player_info</td><td>GET</td><td>Get player information</td></tr>
+          <tr><td>/get_points</td><td>GET</td><td>Get points for a round</td></tr>
+          <tr><td>/get_previous_choices</td><td>GET</td><td>Get previous choices</td></tr>
+          <tr><td>/get_previous_points</td><td>GET</td><td>Get previous points</td></tr>
+          <tr><td>/get_rolling_standings</td><td>GET</td><td>Get rolling standings</td></tr>
+          <tr><td>/get_round_info</td><td>GET</td><td>Get round info</td></tr>
+          <tr><td>/get_round_results</td><td>GET</td><td>Get round results</td></tr>
+          <tr><td>/get_season_overview</td><td>GET</td><td>Get season overview</td></tr>
+          <tr><td>/get_standings</td><td>GET</td><td>Get overall standings</td></tr>
+          <tr><td>/get_weekly_info</td><td>GET</td><td>Get weekly info</td></tr>
+          <tr><td>/init_player</td><td>GET</td><td>Initialize a new player</td></tr>
+          <tr><td>/make_choice</td><td>POST</td><td>Make a player choice</td></tr>
+          <tr><td>/update_choice</td><td>POST</td><td>Update an existing choice</td></tr>
+          <tr><td>/init_notifications</td><td>POST</td><td>Register notification token</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>🛠️ Changelog</h2>
+      <details>
+        <summary>v1.0.1 - June 2025</summary>
+        <ul>
+          <li>Notification token registration added</li>
+          <li>Swagger UI integrated</li>
+          <li>Improved logging for analytics</li>
+        </ul>
+      </details>
+    </section>
+
+    <section>
+      <h2>📬 Contact</h2>
+      <p>Need help? Email: <a href="mailto:Toby96@sky.com">Toby96@sky.com</a></p>
+    </section>
+  </main>
+
+  <footer>FPG - The game for football fans</footer>
+
+  <script>
+    function copyCode(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then();
+    }
+  </script>
+</body>
+</html>
