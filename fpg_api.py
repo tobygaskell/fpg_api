@@ -1,7 +1,9 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_httpauth import HTTPBasicAuth
 from flasgger import Swagger, swag_from
+from datetime import datetime
 import os
+
 
 import api.Players as Players
 import api.Round as Round
@@ -61,9 +63,9 @@ def verify(username, password):
 
 @app.route('/', methods=['GET'])
 def index():
-    '''
-    '''
-    return 'FPG API - V1.0.1 - RUNNING ON {}'.format(os.getenv('HOSTNAME'))
+    hostname = os.getenv('HOSTNAME', 'localhost')
+    year = datetime.now().year
+    return render_template('index.html', hostname=hostname, year=year)
 
 
 @app.route('/current_round', methods=['GET'])
