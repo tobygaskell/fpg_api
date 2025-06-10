@@ -49,3 +49,16 @@ Documentation and endpoint testing can be found [here.](http://127.0.0.1:5000/ap
 kubectl rollout restart deployment fpg-api -n testing
 kubectl rollout restart deployment fpg-api -n prod
 ```
+
+### spin up local docker env
+
+```
+docker build -t fpg .
+docker run -p 8000:8000 --env-file .env fpg
+```
+
+### Spin up a development server
+
+````
+app.run(debug=True, host='0.0.0.0', port=5001)```
+````

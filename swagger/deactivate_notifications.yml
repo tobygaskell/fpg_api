@@ -1,0 +1,27 @@
+Disables push notifications for the given player and token.
+---
+description: Will set the active tag for the given player and token to false which will disable push notifications.
+parameters:
+  - in: query
+    name: player_id
+    schema:
+      type: string
+    required: true
+    description: The ID of the player whose notifications should be deactivated.
+  - in: query
+    name: token
+    schema:
+      type: string
+    required: true
+    description: The notification token to deactivate.
+responses:
+  '200':
+    description: Successfully deactivated notifications
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            Notifications deactivated:
+              type: boolean
+              example: true

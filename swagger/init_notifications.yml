@@ -1,0 +1,30 @@
+Initialise notifications for a player
+---
+description: Registers a player's notification token so they can receive push notifications.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: Token data
+    required: true
+    schema:
+      type: object
+      properties:
+        token:
+          type: string
+          example: ExponentPushToken[e2kjbwkqkjwndqk]
+        player_id:
+          type: integer
+          example: 6
+responses:
+  '200':
+    description: Successfully initialised notifications
+    schema:
+      properties:
+        Notifications initialised:
+          type: boolean
+          example: true
+  
