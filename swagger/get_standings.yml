@@ -32,3 +32,6 @@ responses:
           Score:
             type: integer
             example: 4
+          movement_indicator:
+            type: string
+            example: Up
