@@ -5,13 +5,13 @@ from datetime import datetime
 import os
 
 
-import api.Players as Players
-import api.Round as Round
-import api.Results as Results
-import api.Scores as Scores
-import api.Choices as Choices
-import api.Fixtures as Fixtures
-import api.Notifications as Notifications
+import fpg_api.api.Players as Players
+import fpg_api.api.Round as Round
+import fpg_api.api.Results as Results
+import fpg_api.api.Scores as Scores
+import fpg_api.api.Choices as Choices
+import fpg_api.api.Fixtures as Fixtures
+import fpg_api.api.Notifications as Notifications
 import utils
 
 from dotenv import load_dotenv
@@ -320,6 +320,20 @@ def get_weekly_info():
     return weekly_info
 
 
+@app.route('/get_username', methods=['GET'])
+@swag_from('swagger/get_username.yml')
+def get_username():
+    '''
+    '''
+    player_id = request.args.get('player_id')
+
+    username = Players.get_username(player_id)
+
+    utils.log_call(player_id, 'get_username')
+
+    return {'Username': username}
+
+
 @app.route('/init_player', methods=['GET'])
 @swag_from('swagger/init_player.yml')
 def init_player():
@@ -357,6 +371,32 @@ def make_choice():
     return {'Submitted': submitted}
 
 
+@app.route('/init_player_app', methods=['POST'])
+# @swag_from('swagger/init_player_app.yml')
+def init_player_app():
+    '''
+    '''
+    request_data = request.get_json()
+
+    email = request_data['Email']
+
+    try:
+        username = request_data['Username']
+    except KeyError:
+        username = ''
+
+    try:
+        team = request_data['Team']
+    except KeyError:
+        team = ''
+
+    player_id = Players.init_player(email, username, team)
+
+    utils.log_call(player_id, 'init_player_app')
+
+    return {'player_id': int(player_id)}
+
+
 @app.route('/update_choice', methods=['POST'])
 @swag_from('swagger/update_choice.yml')
 def update_choice():
@@ -371,6 +411,23 @@ def update_choice():
     updated = Choices.update_choice(player, choice, round_id)
 
     utils.log_call(player, 'update_choice')
+
+    return {'Updated': updated}
+
+
+@app.route('/update_username', methods=['POST'])
+@swag_from('swagger/update_username.yml')
+def update_username():
+    '''
+    '''
+    request_data = request.get_json()
+
+    player_id = request_data['player_id']
+    username = request_data['new_username']
+
+    updated = Players.update_username(player_id, username)
+
+    utils.log_call(player_id, 'update_username')
 
     return {'Updated': updated}
 
