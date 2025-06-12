@@ -47,7 +47,8 @@ def get_standings():
 
     , standings as (
         SELECT  F.PLAYER_ID,
-                SUBSTRING_INDEX(email, '@', 1) AS USER,
+                coalesce(nullif(username, ''),
+                         SUBSTRING_INDEX(email, '@', 1)) AS USER,
                 CAST(COALESCE(SUM(total), 0) as int) AS SCORE
         FROM SCORES AS F
         INNER JOIN PLAYERS AS P

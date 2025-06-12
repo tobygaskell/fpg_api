@@ -1,0 +1,28 @@
+Will be used to update the username of a player in the database.
+---
+description: Will update the username for the given player ID.
+parameters:
+  - name: player_id
+    in: query
+    type: integer
+    required: true
+    description: The ID of the player whose username you want to update.
+    example: 6
+  - name: new_username
+    in: query
+    type: string
+    required: true
+    description: The new username to set for the player.
+    example: NewUsername123
+responses:
+  200:
+    description: Successfully updated the username.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            Updated:
+              type: boolean
+              example: true
+          

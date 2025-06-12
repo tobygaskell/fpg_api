@@ -1,0 +1,20 @@
+Get the username for the given player id
+---
+parameters:
+  - name: player_id
+    in: query
+    type: integer
+    required: false
+    description: The player id for whom is making the call.
+    example: 6
+responses:
+  200:
+    description: the username for the player id provided.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            Username:
+              type: string
+              example: MrFPG
