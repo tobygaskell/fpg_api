@@ -11,15 +11,15 @@ kubectl rollout restart deployment fpg-api -n testing
 kubectl rollout restart deployment fpg-api -n prod
 ```
 
-### Spin up local docker env
+### Build & Run docker image locally
 
 ```
 docker build -t fpg .
 docker run -p 8000:8000 --env-file .env fpg
 ```
 
-### Spin up a development server
+### To run locally so it will refresh with changes
 
 ```
-app.run(debug=True, host='0.0.0.0', port=5001)
+docker compose up --build
 ```

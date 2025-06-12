@@ -67,7 +67,6 @@ def index():
     year = datetime.now().year
     return render_template('index.html', hostname=hostname, year=year)
 
-
 @app.route('/current_round', methods=['GET'])
 @swag_from('swagger/current_round.yml')
 def get_current_round():

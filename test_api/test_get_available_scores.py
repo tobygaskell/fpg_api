@@ -6,7 +6,7 @@ import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from fpg_api import app
+from api import app
 from api.Choices import get_available_choices
 from unittest.mock import patch
 
