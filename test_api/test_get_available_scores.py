@@ -6,8 +6,8 @@ import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from api import app
-from api.Choices import get_available_choices
+from fpg_api.app import app
+from fpg_api.api.Choices import get_available_choices
 from unittest.mock import patch
 
 
@@ -26,7 +26,7 @@ def test_get_available_choices(client):
         "choices": ["Player A", "Player B"]
     }
 
-    with patch('fpg_api.Choices.get_available_choices',
+    with patch('fpg_api.api.Choices.get_available_choices',
                return_value=mock_choices) as mock_get_choices:
 
         response = client.get(f'/get_available_choices?player_id={mock_player_id}')
@@ -46,7 +46,7 @@ def test_get_available_choices_returns_json():
 
     expected_json = '[{"TEAM_NAME":"Team A"},{"TEAM_NAME":"Team B"}]'
 
-    with patch('Choices.utils.run_sql_query',
+    with patch('fpg_api.api.Choices.utils.run_sql_query',
                return_value=mock_df) as mock_run_sql:
         result = get_available_choices(mock_player_id)
 
