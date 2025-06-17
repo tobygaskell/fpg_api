@@ -22,6 +22,9 @@ parameters:
         Round:
           type: integer
           example: 10
+        Season:
+          type: integer
+          example: 2024
 responses:
   200:
     description: Successful operation

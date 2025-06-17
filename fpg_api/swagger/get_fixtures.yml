@@ -7,6 +7,12 @@ parameters:
     required: true
     description: The round id you want the fixtures for.
     example: 10
+  - name: season
+    in: query
+    type: integer
+    required: true
+    description: The season for which you want this information
+    example: 2024
   - name: player_id
     in: query
     type: integer

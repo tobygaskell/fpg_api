@@ -61,11 +61,16 @@ def verify(username, password):
 # ----------------------------------------------------------------------------
 
 
-@app.route('/', methods=['GET'])
+@app.route('/api', methods=['GET'])
 def index():
     hostname = os.getenv('HOSTNAME', 'localhost')
     year = datetime.now().year
-    return render_template('index.html', hostname=hostname, year=year)
+    return render_template('api.html', hostname=hostname, year=year)
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('home.html')
 
 
 @app.route('/current_round', methods=['GET'])
@@ -78,11 +83,12 @@ def get_current_round():
     except BaseException:
         player_id = None
 
-    round_id = Round.get_current_round()
+    round_id, season = Round.get_current_round()
 
     utils.log_call(player_id, 'current_round')
 
-    return {'Round ID': round_id}
+    return {'Round ID': round_id,
+            'season': season}
 
 
 @app.route('/deactivate_notifications', methods=['GET'])
@@ -106,11 +112,14 @@ def deactivate_notifications():
 def get_available_choices():
     '''
     '''
+
     player_id = request.args.get('player_id')
+
+    season = request.args.get('season')
 
     utils.log_call(player_id, 'get_available_choices')
 
-    return Choices.get_available_choices(player_id)
+    return Choices.get_available_choices(player_id, season)
 
 
 @app.route('/get_choices', methods=['GET'])
@@ -119,6 +128,8 @@ def get_choices():
     '''
     '''
     round_id = request.args.get('round_id')
+
+    season = request.args.get('season')
 
     try:
         player_id = request.args.get('player_id')
@@ -131,7 +142,7 @@ def get_choices():
     except BaseException:
         inc_method = False
 
-    data = Choices.get_choices(round_id, inc_method)
+    data = Choices.get_choices(round_id, season, inc_method)
 
     utils.log_call(player_id, 'get_choices')
 
@@ -145,6 +156,8 @@ def get_fixtures():
     '''
     round_id = request.args.get('round_id')
 
+    season = request.args.get('season')
+
     try:
         player_id = request.args.get('player_id')
     except BaseException:
@@ -152,7 +165,7 @@ def get_fixtures():
 
     utils.log_call(player_id, 'get_fixtures')
 
-    return Fixtures.get_fixtures(round_id)
+    return Fixtures.get_fixtures(round_id, season)
 
 
 @app.route('/get_player_info', methods=['GET'])
@@ -162,7 +175,9 @@ def get_player_info():
     '''
     player_id = request.args.get('player_id')
 
-    player_info = Players.get_player_info(player_id)
+    season = request.args.get('season')
+
+    player_info = Players.get_player_info(player_id, season)
 
     utils.log_call(player_id, 'get_player_info')
 
@@ -176,12 +191,14 @@ def get_points():
     '''
     round_id = request.args.get('round_id')
 
+    season = request.args.get('season')
+
     try:
         player_id = request.args.get('player_id')
     except BaseException:
         player_id = None
 
-    scores = Scores.get_points(round_id)
+    scores = Scores.get_points(round_id, season)
 
     utils.log_call(player_id, 'get_points')
 
@@ -195,7 +212,9 @@ def get_previous_choices():
     '''
     player_id = request.args.get('player_id')
 
-    prev_choices = Choices.get_previous_choices(player_id)
+    season = request.args.get('season')
+
+    prev_choices = Choices.get_previous_choices(player_id, season)
 
     utils.log_call(player_id, 'get_previous_choices')
 
@@ -209,7 +228,9 @@ def get_previous_points():
     '''
     player_id = request.args.get('player_id')
 
-    prev_points = Choices.get_previous_points(player_id)
+    season = request.args.get('season')
+
+    prev_points = Choices.get_previous_points(player_id, season)
 
     utils.log_call(player_id, 'get_previous_points')
 
@@ -221,12 +242,13 @@ def get_previous_points():
 def get_rolling_standings():
     '''
     '''
+    season = request.args.get('season')
     try:
         player_id = request.args.get('player_id')
     except BaseException:
         player_id = None
 
-    rolling_standings = Results.get_rolling_standings()
+    rolling_standings = Results.get_rolling_standings(season)
 
     utils.log_call(player_id, 'get_rolling_standings')
 
@@ -245,7 +267,9 @@ def get_round_info():
 
     round_id = request.args.get('round_id')
 
-    doubled, dmm, cut_off = Round.get_round_info(round_id)
+    season = request.args.get('season')
+
+    doubled, dmm, cut_off = Round.get_round_info(round_id, season)
 
     utils.log_call(player_id, 'get_round_info')
 
@@ -261,13 +285,14 @@ def get_round_results():
     '''
     '''
     round_id = request.args.get('round_id')
+    season = request.args.get('season')
 
     try:
         player_id = request.args.get('player_id')
     except BaseException:
         player_id = None
 
-    results = Results.get_round_results(round_id)
+    results = Results.get_round_results(round_id, season)
 
     utils.log_call(player_id, 'get_round_results')
 
@@ -280,8 +305,9 @@ def get_season_overview():
     '''
     '''
     player_id = request.args.get('player_id')
+    season = request.args.get('season')
 
-    season_overview = Scores.get_season_overview(player_id)
+    season_overview = Scores.get_season_overview(player_id, season)
 
     utils.log_call(player_id, 'get_season_overview')
 
@@ -293,12 +319,14 @@ def get_season_overview():
 def get_standings():
     '''
     '''
+    season = request.args.get('season')
+
     try:
         player_id = request.args.get('player_id')
     except BaseException:
         player_id = None
 
-    standings = Results.get_standings()
+    standings = Results.get_standings(season)
 
     utils.log_call(player_id, 'get_standings')
 
@@ -312,8 +340,9 @@ def get_weekly_info():
     '''
     player_id = request.args.get('player_id')
     round_id = request.args.get('round_id')
+    season = request.args.get('season')
 
-    weekly_info = Round.weekly_info(player_id, round_id)
+    weekly_info = Round.weekly_info(player_id, round_id, season)
 
     utils.log_call(player_id, 'get_weekly_info')
 
@@ -334,6 +363,13 @@ def get_username():
     return {'Username': username}
 
 
+@app.route('/rules', methods=['GET'])
+def rules():
+    '''
+    '''
+    return render_template('rules.html')
+
+
 @app.route('/init_player', methods=['GET'])
 @swag_from('swagger/init_player.yml')
 def init_player():
@@ -352,23 +388,21 @@ def init_player():
 # POST
 # ----------------------------------------------------------------------------
 
-
-@app.route('/make_choice', methods=['POST'])
-@swag_from('swagger/make_choice.yml')
-def make_choice():
+@app.route('/init_notifications', methods=['POST'])
+@swag_from('swagger/init_notifications.yml')
+def init_notifications():
     '''
     '''
     request_data = request.get_json()
 
-    choice = request_data['Choice']
-    player = request_data['Player']
-    round = request_data['Round']
+    player_id = request_data['player_id']
+    token = request_data['token']
 
-    submitted = Choices.make_choice(player, choice, round)
+    init = Notifications.init_notifications(player_id, token)
 
-    utils.log_call(player, 'make_choice')
+    utils.log_call(player_id, 'init_notifications')
 
-    return {'Submitted': submitted}
+    return {'Notifications initialised': init}
 
 
 @app.route('/init_player_app', methods=['POST'])
@@ -397,6 +431,25 @@ def init_player_app():
     return {'player_id': int(player_id)}
 
 
+@app.route('/make_choice', methods=['POST'])
+@swag_from('swagger/make_choice.yml')
+def make_choice():
+    '''
+    '''
+    request_data = request.get_json()
+
+    choice = request_data['Choice']
+    player = request_data['Player']
+    round = request_data['Round']
+    season = request_data['season']
+
+    submitted = Choices.make_choice(player, choice, round, season)
+
+    utils.log_call(player, 'make_choice')
+
+    return {'Submitted': submitted}
+
+
 @app.route('/update_choice', methods=['POST'])
 @swag_from('swagger/update_choice.yml')
 def update_choice():
@@ -407,8 +460,9 @@ def update_choice():
     choice = request_data['Choice']
     player = request_data['Player']
     round_id = request_data['Round']
+    season = request_data['season']
 
-    updated = Choices.update_choice(player, choice, round_id)
+    updated = Choices.update_choice(player, choice, round_id, season)
 
     utils.log_call(player, 'update_choice')
 
@@ -430,21 +484,3 @@ def update_username():
     utils.log_call(player_id, 'update_username')
 
     return {'Updated': updated}
-
-
-@app.route('/init_notifications', methods=['POST'])
-@swag_from('swagger/init_notifications.yml')
-def init_notifications():
-    '''
-    '''
-    request_data = request.get_json()
-
-    player_id = request_data['player_id']
-
-    token = request_data['token']
-
-    init = Notifications.init_notifications(player_id, token)
-
-    utils.log_call(player_id, 'init_notifications')
-
-    return {'Notifications initialised': init}

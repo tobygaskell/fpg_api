@@ -1,12 +1,20 @@
 Get the points for the all the previous picks made by a player
 ---
 parameters:
-  - in: query
-    name: player_id
+  - name: player_id
+    in: query
     required: true
     schema:
       type: string
     description: The ID of the player
+    example: 6
+  - name: season
+    in: query
+    required: true
+    schema:
+      type: string
+    description: The season for which you need this information
+    example: 2024
 responses:
   200:
     description: A list of the points gained by the previous picked make by a player

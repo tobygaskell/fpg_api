@@ -1,12 +1,18 @@
 Get some info about the player including number of wins predicted etc
 ---
 parameters:
-  - in: query
-    name: player_id
+  - name: player_id
+    in: query
     required: true
     schema:
       type: string
     description: The ID of the player
+  - name: season
+    in: query
+    required: true
+    schema:
+      type: string
+    description: The season for which you want this information
 responses:
   200:
     description: Successful response

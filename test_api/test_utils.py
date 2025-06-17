@@ -11,7 +11,8 @@ def test_run_sql_query_returns_dataframe():
         mock_conn = MagicMock()
 
         # Mock description and result rows
-        mock_cursor.__enter__.return_value.description = [('round_id',), ('name',)]
+        mock_cursor.__enter__.return_value.description = [('round_id',),
+                                                          ('name',)]
         mock_cursor.__enter__.return_value.__iter__.return_value = [
             (1, 'Round 1'),
             (2, 'Round 2')
@@ -32,4 +33,5 @@ def test_run_sql_query_returns_dataframe():
         pd.testing.assert_frame_equal(result, expected_df)
 
         # Ensure execute was called
-        mock_cursor.__enter__.return_value.execute.assert_called_once_with("SELECT * FROM rounds")
+        mock_cursor.__enter__.return_value.execute\
+            .assert_called_once_with("SELECT * FROM rounds")
