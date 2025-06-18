@@ -7,6 +7,12 @@ parameters:
     required: false
     description: The player id for whom is making the call.
     example: 6
+  - name: season
+    in: query
+    type: integer
+    required: True
+    description: The season for which you want this information
+    example: 2024
 responses:
   200:
     description: The season overview for the player id provided.

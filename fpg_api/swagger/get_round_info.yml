@@ -6,11 +6,19 @@ parameters:
     type: integer
     required: true
     description: The round id you want the information for.
+    example: 10
+  - name: season
+    in: query
+    type: integer
+    required: true
+    description: The season for which you want this information
+    example: 2024
   - name: player_id
     in: query
     type: integer
     required: false
     description: The player id for whom is making the call.
+    example: 6
 responses:
   200:
     description: The round information for the round id provided.

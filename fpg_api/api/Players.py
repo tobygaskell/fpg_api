@@ -36,20 +36,7 @@ def init_player(email, username='', team=''):
     return get_player_id(email)
 
 
-def get_all_emails():
-    '''
-    '''
-    query = '''
-            SELECT email
-            FROM PLAYERS
-            WHERE player_id NOT IN (4, 5, 8, 9)
-            '''
-
-    data = utils.run_sql_query(query)['email'].to_list()
-    return data
-
-
-def get_player_info(player_id):
+def get_player_info(player_id, season=2024):
     '''
     '''
     query = '''
@@ -63,7 +50,8 @@ def get_player_info(player_id):
                    COUNT(round) as round_cnt
             FROM SCORES
             WHERE PLAYER_ID = {}
-            '''.format(player_id)
+            AND SEASON = {}
+            '''.format(player_id, season)
 
     data = utils.run_sql_query(query).to_json(orient='records')
 
