@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How to Play</title>
+  <style>
+    :root {
+      --green: #0B4650;
+      --lightgreen: #E6FF2B;
+      --grey: #898A8D;
+      --white: #F9F7F2;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--green);
+      color: var(--white);
+      padding: 1rem;
+    }
+    main {
+      max-width: 800px;
+      margin: 0rem auto;
+      /* padding: 1rem; */
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--lightgreen);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .accordion {
+      border: 1px solid var(--grey);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .accordion summary {
+      background-color: transparent;
+      padding: 1rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--lightgreen);
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .accordion summary:hover {
+      background-color: rgba(230, 255, 43, 0.1);
+    }
+
+    .accordion summary::marker {
+      color: var(--lightgreen);
+    }
+
+    .accordion p {
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 95%;
+      padding: 1rem;
+      margin: 0 auto 1rem;
+      border-collapse: collapse;
+      font-size: 1rem;
+    }
+
+
+    th, td {
+      padding: 0.6rem;
+      border: 1px solid var(--grey);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--lightgreen);
+      color: var(--green);
+    }
+
+    td {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--white);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--grey);
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: var(--lightgreen);
+    }
+
+    .results {
+        margin: 1rem 0;
+        padding: 1rem; 
+        /* margin-left: 1rem;  */
+        /* margin-right: 1rem; */
+        border: 1px solid var(--grey); 
+        border-radius: 8px; 
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .table-container {
+        overflow-x: auto;
+        /* margin: 0 1rem 1rem; */
+    }
+
+    .table-container table {
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .intro-card {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-left: 5px solid var(--lightgreen);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+    }
+
+    .intro-card h2 {
+        margin-top: 0;
+        color: var(--lightgreen);
+        font-size: 1.5rem;
+    }
+
+    .intro-card ul {
+        padding-left: 1.2rem;
+    }
+
+    .intro-card li {
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    .back-button {
+        background-color: var(--green);
+        color: var(--lightgreen);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 0.25rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #113d45; 
+    }
+
+
+
+  </style>
+</head>
+<body>
+<button class="back-button" onclick="window.location.href='/'"">← Back</button>
+  <main>
+  
+
+  <h1>FPG</h1>
+
+  <section class="intro-card">
+
+  <h2>How It Works</h2>
+
+  <ul>
+    <li>Each Premier League round, pick <strong>one team</strong> from a single fixture.</li>
+    <li>Your team's match result determines your points.</li>
+    <li>You can only pick the <strong>same team twice per season</strong> — use your picks wisely!</li>
+  </ul>
+
+  </section>
+
+  <details class="accordion">
+    <summary>Scoring Basics</summary>
+    <p>Your team's match result determines your base points:</p>
+    <table>
+      <thead>
+         <tr>
+          <th>Result</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Win</td><td>+1</td></tr>
+        <tr><td>Draw</td><td>0</td></tr>
+        <tr><td>Loss</td><td>–1</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="accordion">
+    <summary>Head-to-Head Matchups</summary>
+    <p>If your team plays against a team picked by another player:</p>
+    <table>
+      <thead>
+        <tr><th>Result</th><th>Extra Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Win</td><td>+1</td></tr>
+        <tr><td>Draw</td><td>0</td></tr>
+        <tr><td>Loss</td><td>–1</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="accordion">
+    <summary>Derby Fixtures</summary>
+    <p>Picking a team in a derby match comes with added risk and reward:</p>
+    <table>
+      <thead>
+        <tr><th>Result</th><th>Extra Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Win</td><td>+1</td></tr>
+        <tr><td>Draw</td><td>–1</td></tr>
+        <tr><td>Loss</td><td>–1</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="accordion">
+    <summary>Draw Means More Round</summary>
+    <p>Occasionally, a round will reward drawn matches with extra points:</p>
+    <table>
+      <thead>
+        <tr><th>Result</th><th>Bonus Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Draw</td><td>+2</td></tr>
+        <tr><td>Win</td><td>0</td></tr>
+        <tr><td>Loss</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="accordion">
+    <summary>Lonely Pick Bonus</summary>
+    <p>If you're the only player to choose a team, and they win:</p>
+    <table>
+      <thead>
+        <tr><th>Result</th><th>Bonus Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Win</td><td>+1</td></tr>
+        <tr><td>Draw</td><td>0</td></tr>
+        <tr><td>Loss</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <details class="accordion">
+    <summary>Double Points Round</summary>
+    <p>During this round, all points — including bonuses and penalties — are doubled.</p>
+  </details>
+
+  <details class="accordion">
+    <summary>Tiebreaker Rules</summary>
+    <p>If players are tied on points, the total goal difference from all picked teams decides the ranking.</p>
+  </details>
+
+  <details class="accordion">
+    <summary>Missed Picks</summary>
+    <p>
+      If you forget to pick, one is randomly assigned. If that team scores positively, you are docked 1 point. Negative scores are applied as normal.
+    </p>
+  </details>
+
+    <section class="intro-card">
+    <h2>Example Round</h2>
+    <p>
+      For this example we are going to pretend that this round of games is both a <strong>Double Points</strong> round and also a <strong>Draw Means More</strong> round. 
+    </p>
+    <p>
+      In a real game this would be unlikely — however not impossible.
+    </p>
+    <p><strong> Results: </strong></p>
+    <div class="results">Man United 2 ⚔️ 0 Man City</div>
+    <div class="results">Chelsea 1 - 1 Notts Forest</div>
+    <div class="results">Arsenal 2 ⚔️ 2 Tottenham</div>
+    <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Choice</th>
+          <th>Basic</th>
+          <th>H2H</th>
+          <th>Derby</th>
+          <th>DMM</th>
+          <th>Lonely</th>
+          <th>Running Total</th>
+          <th>Doubled</th>
+          <th>Subtotal</th>
+          <th>Docked</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lucas</td>
+          <td>Manchester United</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+          <td>1</td>
+          <td>4</td>
+          <td>True</td>
+          <td>8</td>
+          <td>0</td>
+          <td>8</td>
+        </tr>
+        <tr>
+          <td>Will</td>
+          <td>Manchester City</td>
+          <td>-1</td>
+          <td>-1</td>
+          <td>-1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>-3</td>
+          <td>True</td>
+          <td>-6</td>
+          <td>0</td>
+          <td>-6</td>
+        </tr>
+        <tr>
+          <td>Dustin</td>
+          <td>Chelsea</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0</td>
+          <td>2</td>
+          <td>True</td>
+          <td>4</td>
+          <td>-1</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>Mike</td>
+          <td>Tottenham</td>
+          <td>0</td>
+          <td>0</td>
+          <td>-1</td>
+          <td>2</td>
+          <td>0</td>
+          <td>1</td>
+          <td>True</td>
+          <td>2</td>
+          <td>0</td>
+          <td>2</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+</section>
+</main>
+
+  <footer>FPG - The game for football fans</footer>
+
+</body>
+</html>

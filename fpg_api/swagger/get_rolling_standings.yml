@@ -8,6 +8,12 @@ parameters:
     required: false
     type: integer
     example: 6
+  - name: season
+    in: query
+    description: The season for which you want this information
+    required: True
+    type: integer
+    example: 2024
 responses:
   200:
     description: A list of rolling standings

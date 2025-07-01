@@ -1,0 +1,30 @@
+Will be used to update the username of a player in the database.
+---
+description: Will update the username for the given player ID.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: New Username Data
+    required: true
+    schema:
+      type: object
+      properties:
+        player_id:
+          type: integer
+          example: 6
+        new_username:
+          type: string
+          example: 'MrFPG'
+responses:
+  200:
+    description: Successful operation
+    schema:
+      type: object
+      properties:
+        Updated:
+          type: Boolean
+          example: True

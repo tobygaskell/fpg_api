@@ -1,7 +1,7 @@
 import utils
 
 
-def get_fixtures(round_id):
+def get_fixtures(round_id, season=2024):
     '''
     This Function will take in a round id and return the fixture
     information for that round including the logo urls for the
@@ -20,22 +20,25 @@ def get_fixtures(round_id):
 
             (SELECT *
              FROM FIXTURES
-             WHERE ROUND = {}) AS F
+             WHERE ROUND = {}
+             AND SEASON = {}) AS F
 
             LEFT JOIN
 
             (SELECT TEAM_NAME, LOGO AS HOME_LOGO
-             FROM TEAMS) as HOME
+             FROM TEAMS
+             WHERE SEASON = {}) as HOME
 
             ON F.HOME_TEAM = HOME.TEAM_NAME
 
             LEFT JOIN
 
             (SELECT TEAM_NAME, LOGO AS AWAY_LOGO
-             FROM TEAMS ) AS AWAY
+             FROM TEAMS
+             WHERE SEASON = {}) AS AWAY
 
             ON F.AWAY_TEAM = AWAY.TEAM_NAME );
-            '''.format(round_id)
+            '''.format(round_id, season, season, season)
 
     data = utils.run_sql_query(query)
 

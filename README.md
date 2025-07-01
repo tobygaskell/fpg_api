@@ -2,63 +2,49 @@
 
 This is a backend API for the FPG app. It is the link between the front end and the database.
 
-## API Docs
-
-Documentation and endpoint testing can be found [here.](http://127.0.0.1:5000/apidocs/#)
-
-## Release Pattern
-
-![alt text](image-1.png)
-
-## Endpoints
-
-#### GET
-
-- current_round
-- get_available_choices
-- get_choices
-- get_fixtures
-- get_player_info
-- get_points
-- get_previous_choices
-- get_previous_points
-- get_rolling_standings
-- get_round_info
-- get_round_results
-- get_season_overview
-- get_standings
-- get_weekly_info
-- init_player
-
-#### POST
-
-- make_choice
-- update_choice
-
 ## Useful commands
 
-`ps aux | grep fpg` -- This will show you if the api is running in the background on the server
-
-`nohup venv/bin/python fpg_api.py &` -- This will run the api in the background of the server
-
-`cat nohup.out` -- This will allow you to see the output of the api
-
-### To Gracefully restart the deployment after the docker image is updated
+### Gracefully restart the K8s deployment
 
 ```
 kubectl rollout restart deployment fpg-api -n testing
 kubectl rollout restart deployment fpg-api -n prod
 ```
 
-### spin up local docker env
+### Build & Run docker image locally
 
 ```
 docker build -t fpg .
 docker run -p 8000:8000 --env-file .env fpg
 ```
 
-### Spin up a development server
+### To run locally so it will refresh with changes
 
-````
-app.run(debug=True, host='0.0.0.0', port=5001)```
-````
+```
+docker compose up --build
+```
+
+| Endpoint                 | Season Added | Tested |
+| ------------------------ | ------------ | ------ |
+| current_round            | N/A          | N/A    |
+| deactivate_notifications | N/A          | N/A    |
+| get_available_choices    | True         | False  |
+| get_choices              | True         | False  |
+| get_fixtures             | True         | False  |
+| get_player_info          | True         | False  |
+| get_points               | True         | False  |
+| get_previous_choices     | True         | False  |
+| get_previous_points      | True         | False  |
+| get_rolling_standings    | True         | False  |
+| get_round_info           | True         | False  |
+| get_round_results        | True         | False  |
+| get_season_overview      | True         | False  |
+| get_standings            | True         | False  |
+| get_weekly_info          | True         | False  |
+| get_username             | N/A          | N/A    |
+| init_player              | N/A          | N/A    |
+| init_notifications       | N/A          | N/A    |
+| init_player_app          | N/A          | N/A    |
+| make_choice              | True         | False  |
+| update_choice            | True         | False  |
+| update_username          | N/A          | N/A    |

@@ -6,8 +6,8 @@ import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from fpg_api import app
-from api.Round import get_current_round
+from fpg_api.app import app
+from fpg_api.api.Round import get_current_round
 from unittest.mock import patch
 
 
@@ -19,32 +19,22 @@ def client():
 
 
 def test_get_current_round_without_player_id(client):
-    with patch('fpg_api.Round.get_current_round', return_value=42):
+    with patch('fpg_api.api.Round.get_current_round', return_value=42):
         response = client.get('/current_round')
         assert response.status_code == 200
         assert response.json == {'Round ID': 42}
 
 
 def test_get_current_round_with_player_id(client):
-    with patch('fpg_api.Round.get_current_round', return_value=99):
+    with patch('fpg_api.api.Round.get_current_round', return_value=99):
         response = client.get('/current_round?player_id=123')
         assert response.status_code == 200
         assert response.json == {'Round ID': 99}
 
 
-def test_get_current_round_sql():
+def test_get_current_round():
     # Mock the SQL query result
-    with patch('Round.utils.run_sql_query') as mock_run_sql:
+    with patch('fpg_api.api.Round.utils.run_sql_query') as mock_run_sql:
         mock_run_sql.return_value = pd.DataFrame({'current_round': [27]})
-        result = get_current_round(method='sql')
+        result = get_current_round()
         assert result == 27
-
-
-def test_get_current_round_api():
-    # Mock the API call response
-    with patch('Round.utils.get_api') as mock_get_api:
-        mock_get_api.return_value = {
-            'response': ['Premier League - Round 35']
-        }
-        result = get_current_round(method='api')
-        assert result == 35

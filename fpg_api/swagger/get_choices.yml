@@ -7,6 +7,12 @@ parameters:
     required: true
     description: The round id for the round you want to see the choices for.
     example: 10
+  - name: season
+    in: query
+    type: integer
+    required: True
+    description: The season for which you want the information
+    example: 2024
   - name: player_id
     in: query
     type: integer
@@ -20,6 +26,7 @@ parameters:
     description: Whether or not to include the choice method in the response.
     default: False
     example: False
+
 responses:
   200:
     description: A dictionary with player IDs as keys and their choices as values.

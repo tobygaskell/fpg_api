@@ -1,6 +1,6 @@
-Submit a weekly choice
+Update a choice
 ---
-description: This endpoint allows you to post the weekly choice to the database.
+description: Allows you to change a choice which has already been submitted
 consumes:
   - application/json
 produces:
@@ -8,7 +8,7 @@ produces:
 parameters:
   - in: body
     name: body
-    description: Choice data
+    description: Choice data to be updated
     required: true
     schema:
       type: object
@@ -22,13 +22,15 @@ parameters:
         Round:
           type: integer
           example: 10
+        season:
+          type: integer
+          example: 2024
 responses:
   200:
     description: Successful operation
     schema:
       type: object
       properties:
-        Submitted:
-          type: string
-          enum: [Too Late, Already Chosen, True]
-          example: True
+        Updated:
+          type: boolean
+          example: true

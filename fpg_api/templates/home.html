@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <title>FPG - Home</title>
+  <style>
+    :root {
+      --green: #0B4650;
+      --lightgreen: #E6FF2B;
+      --grey: #898A8D;
+      --white: #F9F7F2;
+    }
+
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--green);
+      color: var(--white);
+      padding: 2rem 1rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+    font-size: 8rem;
+    font-family: 'Oswald', sans-serif;
+    color: var(--lightgreen);
+    letter-spacing: 0px;
+    font-weight: 500;
+    margin: 0 auto;
+    line-height: 1;
+    width: fit-content;
+    text-align: center;
+    }
+
+
+
+    .tagline {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: var(--lightgreen);
+      margin-bottom: 1.8rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Highlight box */
+    .yellow {
+      background-color: var(--lightgreen);
+      color: var(--green);
+    }
+
+    /* Buttons container to stack nicely */
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 90%;
+      margin: 0 auto 1rem;
+    }
+
+    .button {
+      display: block;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      background-color: var(--lightgreen);
+      color: var(--green);
+      border: 1px solid var(--lightgreen);
+      /* box-shadow: 0 6px 8px rgba(230,255,43,0.4); */
+    }
+
+    .button.primary:hover,
+    .button.primary:focus {
+      background-color: #d4e600;
+      border-color: #c0db00;
+      transform: translateY(-3px);
+      /* box-shadow: 0 8px 12px rgba(212,230,0,0.6); */
+      outline: none;
+    }
+
+    .button.secondary {
+      background-color: transparent;
+      color: var(--lightgreen);
+      border: 2px solid var(--lightgreen);
+    }
+
+    .button.secondary:hover {
+      background-color: rgba(230, 255, 43, 0.15);
+      color: var(--green);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    /* Section title */
+    .section-title {
+      margin: 1rem 0 1rem;
+      font-size: 1.6rem;
+      color: var(--lightgreen);
+      border-bottom: 2px solid var(--lightgreen);
+      display: inline-block;
+      padding-bottom: 0.3rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      user-select: none;
+    }
+
+    /* Blog cards */
+    .link-card {
+      background-color: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid var(--grey);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 1.2rem 1.8rem;
+      margin: 1rem auto;
+      max-width: 650px;
+      text-align: left;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .link-card:hover,
+    .link-card:focus {
+      background-color: rgba(230, 255, 43, 0.12);
+      border-color: var(--lightgreen);
+      color: var(--lightgreen);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 15px rgba(230,255,43,0.3);
+      outline: none;
+    }
+/* 
+    .link-card::before {
+      content: "📖";
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      user-select: none;
+    } */
+
+    footer {
+      margin-top: 1rem;
+      color: var(--grey);
+      font-size: 0.95rem;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .tagline {
+        font-size: 1.25rem;
+      }
+
+      .button-group {
+        max-width: 100%;
+      }
+
+      .button {
+        font-size: 1rem;
+        padding: 0.9rem 1.5rem;
+      }
+
+      .link-card {
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 1rem;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FPG</h1>
+    <!-- <h1>P</h1>
+    <h1>G</h1> -->
+    <div class="tagline">Football. Prediction. Glory.</div>
+
+    <div class="button-group">
+      <a href="https://apps.apple.com/gb/app/fpg/id6741867654" class="button primary" target="_blank" rel="noopener noreferrer">📲 Download FPG</a>
+      <a href="https://instagram.com/fpg.updates" class="button primary" target="_blank" rel="noopener noreferrer">📸 Follow us on Instagram</a>
+      <a href="/rules" class="button primary">📓 Checkout the Rules</a>
+      <a href="/api" class="button primary">🖥️ API Details</a>
+    </div>
+
+    <footer>
+      &copy; 2025 FPG — The game for football fans
+    </footer>
+  </div>
+</body>
+</html>
