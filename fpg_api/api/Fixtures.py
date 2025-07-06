@@ -1,33 +1,33 @@
+"""Module for retrieving fixture information for a round."""
+
 import utils
 
 
 def get_fixtures(round_id, season=2024):
-    '''
-    This Function will take in a round id and return the fixture
-    information for that round including the logo urls for the
-    home and away team.
+    """Return fixture information for a round.
 
     PARAMS:
-    round_id (int) - Theround you want the fixtures for.
+    round_id (int) - The round you want the fixtures for.
 
-    RETURNS:
+    Returns:
     data (json) - This is the json version of data returned from
     the query used to get the fixtures.
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT F.*, HOME.HOME_LOGO, AWAY.AWAY_LOGO
             FROM (
 
             (SELECT *
              FROM FIXTURES
-             WHERE ROUND = {}
-             AND SEASON = {}) AS F
+             WHERE ROUND = %s
+             AND SEASON = %s) AS F
 
             LEFT JOIN
 
             (SELECT TEAM_NAME, LOGO AS HOME_LOGO
              FROM TEAMS
-             WHERE SEASON = {}) as HOME
+             WHERE SEASON = %s) as HOME
 
             ON F.HOME_TEAM = HOME.TEAM_NAME
 
@@ -35,11 +35,13 @@ def get_fixtures(round_id, season=2024):
 
             (SELECT TEAM_NAME, LOGO AS AWAY_LOGO
              FROM TEAMS
-             WHERE SEASON = {}) AS AWAY
+             WHERE SEASON = %s) AS AWAY
 
             ON F.AWAY_TEAM = AWAY.TEAM_NAME );
-            '''.format(round_id, season, season, season)
+            """
 
-    data = utils.run_sql_query(query)
+    params = (round_id, season, season, season)
 
-    return data.to_json(orient='records')
+    data = utils.run_sql_query(query, params=params)
+
+    return data.to_json(orient="records")

@@ -1,15 +1,16 @@
+"""Functions for retrieving and processing player scores and season overviews."""
+
 import utils
 
 
 def get_points(round_id, season=2024):
-    '''
-    '''
-    query = '''
+    """Retrieve player points for a given round and season."""
+    query = """
             WITH SEASON_SCORES AS (
-                SELECT * FROM SCORES WHERE SEASON = {}
+                SELECT * FROM SCORES WHERE SEASON = %s
             )
             ,  SEASON_CHOICES AS (
-                SELECT * FROM CHOICES WHERE SEASON = {}
+                SELECT * FROM CHOICES WHERE SEASON = %s
             )
 
             SELECT p.player_id,
@@ -30,19 +31,19 @@ def get_points(round_id, season=2024):
             on s.player_id = p.player_id
             LEFT JOIN SEASON_CHOICES AS c
             ON p.player_id = c.player_id AND s.round = c.round
-            WHERE s.round = {}
+            WHERE s.round = %s
             ORDER BY TOTAL DESC, Result Desc, Choice
-            '''.format(season, season, round_id)
+            """
 
-    points = utils.run_sql_query(query)
+    params = (season, season, round_id)
+    points = utils.run_sql_query(query, params=params)
 
-    return points.to_json(orient='records')
+    return points.to_json(orient="records")
 
 
 def get_season_overview(player_id, season=2024):
-    '''
-    '''
-    query = '''
+    """Retrieve a season overview for a player, including results and points for each round."""
+    query = """
             WITH a AS (
                 SELECT ROW_NUMBER() OVER (ORDER BY '1') AS round
                 FROM CALL_LOGS cl
@@ -54,19 +55,20 @@ def get_season_overview(player_id, season=2024):
                    COALESCE(BASIC_POINTS, 0) AS RESULT,
                    COALESCE(TOTAL, 0) AS POINTS
             FROM SCORES AS s
-            WHERE player_id = {}
-            AND season = {})
+            WHERE player_id = %s
+            AND season = %s)
 
             SELECT a.round,
-                COALESCE(b.player_id, {}) AS player_id,
+                COALESCE(b.player_id, %s) AS player_id,
                 b.result,
                 b.points
             FROM a
             LEFT JOIN b
             ON a.round = b.round
             ORDER BY a.ROUND;
-            '''.format(player_id, season, player_id)
+            """
 
-    season_overview = utils.run_sql_query(query)
+    params = (player_id, season, player_id)
+    season_overview = utils.run_sql_query(query, params=params)
 
-    return season_overview.to_json(orient='records')
+    return season_overview.to_json(orient="records")
