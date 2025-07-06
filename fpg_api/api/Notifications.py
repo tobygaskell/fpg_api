@@ -1,9 +1,10 @@
+"""File to store all of the notification endpoints."""
+
 import utils
 
 
 def init_notifications(player_id, token):
-    '''
-    Initialize notifications for a player.
+    """Initialize notifications for a player.
 
     Args:
         player_id (int): The ID of the player.
@@ -11,35 +12,37 @@ def init_notifications(player_id, token):
 
     Returns:
         bool: True if initialization was successful, False otherwise.
-    '''
+
+    """
     token_exists = check_token_exists(player_id, token)
 
     if not token_exists:
-        query = '''
+        query = """
                 INSERT INTO TOKENS (PLAYER_ID, TOKEN, CREATED_AT, ACTIVE)
-                VALUES ({}, '{}', CURRENT_TIMESTAMP(2), 1)
-                '''.format(player_id, token)
+                VALUES (%s, %s, CURRENT_TIMESTAMP(2), 1)
+                """
+        params = (player_id, token)
 
-        utils.run_sql_query(query, True)
+        utils.run_sql_query(query, True, params=params)
 
     token_active = check_token_active(player_id, token)
 
     if not token_active:
-        query = '''
+        query = """
                 UPDATE TOKENS
                 SET ACTIVE = 1
-                WHERE PLAYER_ID = {}
-                AND token = '{}'
-                '''.format(player_id, token)
+                WHERE PLAYER_ID = %s
+                AND token = %s
+                """
+        params = (player_id, token)
 
-        utils.run_sql_query(query, True)
+        utils.run_sql_query(query, True, params=params)
 
     return True
 
 
 def check_token_active(player_id, token):
-    '''
-    Check if a notification token is active for a player.
+    """Check if a notification token is active for a player.
 
     Args:
         player_id (int): The ID of the player.
@@ -47,47 +50,53 @@ def check_token_active(player_id, token):
 
     Returns:
         bool: True if the token is active, False otherwise.
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT ACTIVE
             FROM TOKENS
-            WHERE PLAYER_ID = {}
-            AND TOKEN = '{}'
-            '''.format(player_id, token)
+            WHERE PLAYER_ID = %s
+            AND TOKEN = %s
+            """
+    params = (player_id, token)
 
-    return utils.run_sql_query(query)['ACTIVE'][0] == 1
+    return utils.run_sql_query(query, params=params)["ACTIVE"][0] == 1
 
 
 def check_token_exists(player_id, token):
-    '''
-    Check if a notification token exists for a player.
+    """Check if a notification token exists for a player.
 
     Args:
         player_id (int): The ID of the player.
+        token: the expo string used to send notifications.
 
     Returns:
         bool: True if the token exists, False otherwise.
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT COUNT(*) AS TOKEN_EXISTS
             FROM TOKENS
-            WHERE PLAYER_ID = {}
-            AND TOKEN = '{}'
-            '''.format(player_id, token)
+            WHERE PLAYER_ID = %s
+            AND TOKEN = %s
+            """
 
-    return utils.run_sql_query(query)['TOKEN_EXISTS'][0] > 0
+    params = (player_id, token)
+
+    return utils.run_sql_query(query, params=params)["TOKEN_EXISTS"][0] > 0
 
 
 def deactivate_notifications(token, player_id):
-    '''
-    '''
-    query = '''
+    """Deactivate Notifications when players log out of the app."""
+    query = """
             UPDATE TOKENS
             SET ACTIVE = 0
-            WHERE TOKEN = '{}'
-            AND PLAYER_ID = {}
-            '''.format(token, player_id)
+            WHERE TOKEN = %s
+            AND PLAYER_ID = %s
+            """
 
-    utils.run_sql_query(query, True)
+    params = (token, player_id)
+
+    utils.run_sql_query(query, True, params=params)
 
     return True

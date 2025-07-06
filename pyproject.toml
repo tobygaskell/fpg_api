@@ -10,8 +10,10 @@ dependencies = [
     "flask>=3.1.0",
     "flask-httpauth>=4.8.0",
     "gunicorn>=23.0.0",
+    "mkdocs-material>=9.6.15",
     "mysql-connector-python>=9.3.0",
     "pandas>=2.2.3",
+    "pymdown-extensions>=10.16",
     "pytest>=8.3.5",
     "sqlalchemy>=2.0.40",
 ]
@@ -21,3 +23,25 @@ minversion = "6.0"
 addopts = "-ra -q"
 testpaths = ["test_api"]
 
+[tool.ruff]
+lint.extend-select = [
+    "ALL"
+]
+
+lint.ignore = [
+    "Q000", 
+    "Q002", 
+    "ANN001",
+    "ANN201",
+    "FBT003",
+    "FBT002", 
+    "D213",
+    "D211",
+    "N999",
+]
+
+# Allow lines to be as long as 100.
+line-length = 100
+
+# Group violations by containing file.
+output-format = "grouped"

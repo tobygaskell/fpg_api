@@ -1,13 +1,13 @@
-FROM python:3.13-slim
+FROM ghcr.io/astral-sh/uv:python3.12-alpine
+
+ADD . /app
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+RUN ["uv", "sync", "--locked"]
 
 COPY . .
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "wsgi:app"]
+CMD ["uv", "run", "gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "wsgi:app"]

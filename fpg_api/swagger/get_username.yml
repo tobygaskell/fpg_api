@@ -4,7 +4,7 @@ parameters:
   - name: player_id
     in: query
     type: integer
-    required: false
+    required: True
     description: The player id for whom is making the call.
     example: 6
 responses:

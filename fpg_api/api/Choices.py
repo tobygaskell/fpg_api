@@ -1,153 +1,165 @@
+"""File to store all of the endpoints related to the players FPG Choice."""
+
+from datetime import UTC, datetime
+
 import utils
-import fpg_api.api.Round as Round
-from datetime import datetime
+from fpg_api.api import rounds
 
 
 def get_choices(round_id, season=2024, inc_method=False):
-    '''
-    This Function will get the already chosen teams from the
-    database and return them in a python dictionary
+    """Will get the already chosen teams from the database and return them in a python dictionary.
 
     Args:
-        round_id (int): the round you would like to see the
-        choices for
+        round_id (int): the round you would like to see the choices for
+        season (int): teh season you want the choice for
+        inc_method (boolean): whether or not you want the method included in the returned values
 
     Returns:
         dict: a dict with the player ID as the key and the
         team choice as the value
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT PLAYER_ID, TEAM_CHOICE, ROUND, METHOD
             FROM CHOICES
-            WHERE ROUND = {}
-            AND SEASON = {}
-            '''.format(round_id, season)
+            WHERE ROUND = %s
+            AND SEASON = %s
+            """
+    params = (round_id, season)
 
-    choices = utils.run_sql_query(query)
+    choices = utils.run_sql_query(query, params=params)
     if inc_method:
-        choices_dict = {row['PLAYER_ID']: {'Choice': row['TEAM_CHOICE'],
-                                           'Method': row['METHOD']} for _,
-                        row in choices.iterrows()}
+        choices_dict = {
+            row["PLAYER_ID"]: {"Choice": row["TEAM_CHOICE"], "Method": row["METHOD"]}
+            for _, row in choices.iterrows()
+        }
     else:
-        choices_dict = {row['PLAYER_ID']: row['TEAM_CHOICE'] for _,
-                        row in choices.iterrows()}
+        choices_dict = {row["PLAYER_ID"]: row["TEAM_CHOICE"] for _, row in choices.iterrows()}
 
     return choices_dict
 
 
 def make_choice(player, choice, round_id, season=2024):
-    '''
-    _summary_
+    """_summary_.
 
     Args:
         player (_type_): _description_
         choice (_type_): _description_
         round_id (_type_): _description_
+        season (_type_): description
 
     Returns:
         _type_: _description_
-    '''
+
+    """
     submitted = False
 
-    _, _, cut_off = Round.get_round_info(round_id, season)
+    _, _, cut_off = rounds.get_round_info(round_id, season)
 
-    if cut_off > datetime.now():
-
-        query = '''
+    if cut_off > datetime.now(tz=UTC):
+        query = """
                 SELECT COUNT(*) AS CHOICE_EXISTS
                 FROM CHOICES
-                WHERE PLAYER_ID = {}
-                AND SEASON = {}
-                AND ROUND = {}
-                '''.format(player, season, round_id)
+                WHERE PLAYER_ID = %s
+                AND SEASON = %s
+                AND ROUND = %s
+                """
 
-        choices_exists = utils.run_sql_query(query)['CHOICE_EXISTS'][0]
+        params = (player, season, round_id)
+
+        choices_exists = utils.run_sql_query(query, params=params)["CHOICE_EXISTS"][0]
 
         if choices_exists == 0:
-
-            query = '''
+            query = """
                     INSERT INTO CHOICES
                     (PLAYER_ID, TEAM_CHOICE, ROUND, SEASON)
                     values
-                    ({}, '{}', {}, {});
-                    '''.format(player, choice, round_id, season)
+                    (%s, %s, %s, %s);
+                    """
+            params = (player, choice, round_id, season)
 
-            utils.run_sql_query(query, True)
+            utils.run_sql_query(query, True, params=params)
 
             submitted = True
 
         else:
-            submitted = 'Already Chosen'
+            submitted = "Already Chosen"
 
     else:
-        submitted = 'Too Late'
+        submitted = "Too Late"
 
     return submitted
 
 
 def get_available_choices(player_id, season=2024):
-    '''
-    _summary_
+    """_summary_.
 
     Args:
         player_id (_type_): _description_
+        season (_type_): _description_
 
     Returns:
         _type_: _description_
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT TEAM_NAME
             FROM TEAMS
-            WHERE SEASON = {}
+            WHERE SEASON = %s
             AND TEAM_NAME NOT IN (SELECT TEAM_CHOICE
                                 FROM CHOICES
-                                WHERE PLAYER_ID = {}
-                                AND SEASON = {}
+                                WHERE PLAYER_ID = %s
+                                AND SEASON = %s
                                 GROUP BY TEAM_CHOICE
                                 HAVING COUNT(*) > 1)
-            '''.format(season, player_id, season)
+            """
 
-    data = utils.run_sql_query(query)
+    params = (season, player_id, season)
 
-    return data.to_json(orient='records')
+    data = utils.run_sql_query(query, params=params)
+
+    return data.to_json(orient="records")
 
 
 def update_choice(player, choice, round_id, season=2024):
-    '''
-    _summary_
+    """_summary_.
 
     Args:
         player (_type_): _description_
         choice (_type_): _description_
         round_id (_type_): _description_
+        season (_type_): _description_
 
     Returns:
         _type_: _description_
-    '''
-    query = '''
-            UPDATE CHOICES
-            SET TEAM_CHOICE = '{}'
-            WHERE PLAYER_ID = {}
-            AND ROUND = {}
-            AND SEASON = {}
-            '''.format(choice, player, round_id, season)
 
-    utils.run_sql_query(query, True)
+    """
+    query = """
+            UPDATE CHOICES
+            SET TEAM_CHOICE = %s
+            WHERE PLAYER_ID = %s
+            AND ROUND = %s
+            AND SEASON = %s
+            """
+    params = (choice, player, round_id, season)
+
+    utils.run_sql_query(query, True, params=params)
 
     return True
 
 
 def get_previous_choices(player_id, season=2024):
-    '''
-    _summary_
+    """_summary_.
 
     Args:
         player_id (_type_): _description_
+        season (_type_): _description_
 
     Returns:
         _type_: _description_
-    '''
-    query = '''
+
+    """
+    query = """
             SELECT team_name as Choice, case when choice_cnt > 0
                                             then True else False
                                         end as '1st Pick',
@@ -158,13 +170,13 @@ def get_previous_choices(player_id, season=2024):
             from ((
             select team_name
             from TEAMS
-            WHERE SEASON = {}) AS t
+            WHERE SEASON = %s) AS t
             left join
             (
             select Team_choice, count(*) as choice_cnt
             FROM CHOICES c
-            WHERE PLAYER_ID = {}
-            AND SEASON = {}
+            WHERE PLAYER_ID = %s
+            AND SEASON = %s
             and c.round <> (SELECT ROUND_ID from CURRENT_ROUND)
             group by team_choice) as c
             on team_name = team_choice)
@@ -172,26 +184,26 @@ def get_previous_choices(player_id, season=2024):
                         then True else False end desc,
                     case when choice_cnt > 0
                         then True else False end desc, Choice
-            '''.format(season, player_id, season)
+            """
+    params = (season, player_id, season)
 
-    data = utils.run_sql_query(query)
+    data = utils.run_sql_query(query, params=params)
 
-    return data.to_json(orient='records')
+    return data.to_json(orient="records")
 
 
 def get_previous_points(player_id, season=2024):
-    '''
-    '''
-    query = '''
+    """Get previous points."""
+    query = """
             WITH a as (
                 select s.player_id, s.round,
                     COALESCE(total, 0) as total,
                     c.team_choice
-                from ((SELECT * FROM SCORES WHERE SEASON = {}) s
-                inner join (SELECT * FROM CHOICES WHERE SEASON = {}) c
+                from ((SELECT * FROM SCORES WHERE SEASON = %s) s
+                inner join (SELECT * FROM CHOICES WHERE SEASON = %s) c
                 on s.round = c.ROUND
                 and s.PLAYER_ID = c.PLAYER_ID )
-                where s.player_id = {}
+                where s.player_id = %s
                 order by s.round
                 )
 
@@ -225,13 +237,14 @@ def get_previous_points(player_id, season=2024):
             from first_pick as q
             left join second_pick as w
             on q.team_choice = w.team_choice
-            right join (SELECT * FROM TEAMS WHERE SEASON = {}) t
+            right join (SELECT * FROM TEAMS WHERE SEASON = %s) t
             on q.team_choice = t.TEAM_NAME
             order by coalesce(second_pick, -100000) desc,
                     coalesce(first_pick, -100000) desc,
                     Choice
-            '''.format(season, season, player_id, season)
+            """
+    params = (season, season, player_id, season)
 
-    data = utils.run_sql_query(query)
+    data = utils.run_sql_query(query, params=params)
 
-    return data.to_json(orient='records')
+    return data.to_json(orient="records")
