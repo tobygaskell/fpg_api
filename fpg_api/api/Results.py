@@ -1,10 +1,11 @@
+"""Module for retrieving football prediction game results and standings."""
+
 import utils
 
 
 def get_standings(season):
-    '''
-    '''
-    query = '''
+    """Retrieve the current standings for the specified season."""
+    query = """
             WITH base as (
                 SELECT distinct c.player_id, r.round, r.fixture_id,
                     team_choice, home_team, away_team, home_goals,
@@ -12,10 +13,10 @@ def get_standings(season):
                 from (SELECT DISTINCT *
                     FROM RESULTS
                     WHERE game_status = 'Match Finished'
-                    AND season = {}) r
-                left join (SELECT * FROM FIXTURES WHERE SEASON = {}) f
+                    AND season = %s) r
+                left join (SELECT * FROM FIXTURES WHERE SEASON = %s) f
                 on r.FIXTURE_ID  = f.FIXTURE_ID
-                left join (SELECT * FROM CHOICES WHERE SEASON = {}) c
+                left join (SELECT * FROM CHOICES WHERE SEASON = %s) c
                 on TEAM_CHOICE = home_team
                 and r.round = c.round
                 left join PLAYERS p
@@ -29,10 +30,10 @@ def get_standings(season):
                 from (SELECT DISTINCT *
                     FROM RESULTS
                     WHERE game_status = 'Match Finished'
-                    AND season = {}) r
-                left join (SELECT * FROM FIXTURES WHERE SEASON = {}) f
+                    AND season = %s) r
+                left join (SELECT * FROM FIXTURES WHERE SEASON = %s) f
                 on r.FIXTURE_ID  = f.FIXTURE_ID
-                left join (SELECT * FROM CHOICES WHERE SEASON = {}) c
+                left join (SELECT * FROM CHOICES WHERE SEASON = %s) c
                 on TEAM_CHOICE = away_team
                 and r.round = c.round
                 left join PLAYERS p
@@ -52,7 +53,7 @@ def get_standings(season):
                         coalesce(nullif(username, ''),
                                 SUBSTRING_INDEX(email, '@', 1)) AS USER,
                         CAST(COALESCE(SUM(total), 0) as int) AS SCORE
-                FROM (SELECT * FROM SCORES WHERE season = {}) AS F
+                FROM (SELECT * FROM SCORES WHERE season = %s) AS F
                 RIGHT JOIN PLAYERS AS P
                 ON F.PLAYER_ID = P.PLAYER_ID
                 GROUP BY P.player_id
@@ -62,7 +63,7 @@ def get_standings(season):
             , max_round as (
                 SELECT MAX(ROUND) AS max_round
                 FROM SCORES
-                WHERE season = {}
+                WHERE season = %s
             )
 
             , last_weeks_standings as (
@@ -70,7 +71,7 @@ def get_standings(season):
                     P.PLAYER_ID,
                     SUBSTRING_INDEX(email, '@', 1) AS USER,
                     CAST(COALESCE(SUM(TOTAL), 0) AS int) AS SCORE
-                FROM (SELECT * FROM SCORES WHERE season = {}) AS F
+                FROM (SELECT * FROM SCORES WHERE season = %s) AS F
                 RIGHT JOIN PLAYERS AS P
                 ON F.PLAYER_ID = P.PLAYER_ID
                 WHERE round NOT IN (SELECT * FROM max_round)
@@ -150,26 +151,36 @@ def get_standings(season):
             left join last_week_final as lwf
             on f.player_id = lwf.player_id
             ORDER BY  f.position, f.player_id;
-            '''.format(season, season, season,
-                       season, season, season,
-                       season, season, season)
-    data = utils.run_sql_query(query)
+            """
+    data = utils.run_sql_query(
+        query,
+        params=(
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+        ),
+    )
 
-    return data.to_json(orient='records')
+    return data.to_json(orient="records")
 
 
 def get_rolling_standings(season=2024):
-    '''
-    '''
-    query = '''
+    """Retrieve rolling standings for each round in the specified season."""
+    query = """
             WITH base AS (
                 SELECT distinct c.player_id, r.round, r.fixture_id,
                     team_choice, home_team, away_team, home_goals,
                     away_goals,  home_goals - away_goals as GD
-                from (SELECT * FROM RESULTS WHERE SEASON = {}) r
-                left join (SELECT * FROM FIXTURES WHERE SEASON = {}) f
+                from (SELECT * FROM RESULTS WHERE SEASON = %s) r
+                left join (SELECT * FROM FIXTURES WHERE SEASON = %s) f
                 on r.FIXTURE_ID  = f.FIXTURE_ID
-                left join (SELECT * FROM CHOICES WHERE SEASON = {}) c
+                left join (SELECT * FROM CHOICES WHERE SEASON = %s) c
                 on TEAM_CHOICE = home_team
                 and r.round = c.round
                 left join PLAYERS p
@@ -180,10 +191,10 @@ def get_rolling_standings(season=2024):
                 select distinct c.player_id, r.round, r.fixture_id,
                     team_choice, home_team, away_team, home_goals,
                     away_goals, away_goals - home_goals as GD
-                from (SELECT * FROM RESULTS WHERE SEASON = {}) r
-                left join (SELECT * FROM FIXTURES WHERE SEASON = {}) f
+                from (SELECT * FROM RESULTS WHERE SEASON = %s) r
+                left join (SELECT * FROM FIXTURES WHERE SEASON = %s) f
                 on r.FIXTURE_ID  = f.FIXTURE_ID
-                left join (SELECT * FROM CHOICES WHERE SEASON = {}) c
+                left join (SELECT * FROM CHOICES WHERE SEASON = %s) c
                 on TEAM_CHOICE = away_team
                 and r.round = c.round
                 left join PLAYERS p
@@ -207,7 +218,7 @@ def get_rolling_standings(season=2024):
                             COALESCE(SUM(TOTAL) OVER (PARTITION by player_id
                                                     order by s.round asc), 0)
                                                     as rolling_total
-                FROM (SELECT * FROM SCORES WHERE SEASON = {}) AS s
+                FROM (SELECT * FROM SCORES WHERE SEASON = %s) AS s
                 INNER JOIN PLAYERS AS p
                 ON s.PLAYER_ID = p.PLAYER_ID
                 INNER JOIN ROUNDS AS r
@@ -226,24 +237,33 @@ def get_rolling_standings(season=2024):
             INNER JOIN subtotal AS t
             ON stand.player_id = t.player_id
             AND stand.round = t.round;
-            '''.format(season, season, season,
-                       season, season, season,
-                       season)
+            """
 
-    data = utils.run_sql_query(query)
+    data = utils.run_sql_query(
+        query,
+        params=(
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+            season,
+        ),
+    )
 
-    return data.to_json(orient='records')
+    return data.to_json(orient="records")
 
 
 def get_round_results(round_id, season=2024):
-    '''
-    '''
-    query = '''
+    """Retrieve results for a specific round and season where the match is finished."""
+    query = """
             SELECT DISTINCT *
             FROM RESULTS
-            WHERE ROUND = {}
-            AND SEASON = {}
+            WHERE ROUND = %s
+            AND SEASON = %s
             AND GAME_STATUS = 'Match Finished'
-            '''.format(round_id, season)
+            """
 
-    return utils.run_sql_query(query).to_json(orient='records')
+    params = (round_id, season)
+    return utils.run_sql_query(query, params=params).to_json(orient="records")
