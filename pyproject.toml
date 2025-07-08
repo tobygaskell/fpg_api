@@ -39,6 +39,7 @@ lint.ignore = [
     "D213",
     "D211",
     "N999",
+    "S101",
 ]
 
 # Allow lines to be as long as 100.

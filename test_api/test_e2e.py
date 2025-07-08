@@ -1,6 +1,7 @@
-# tests/integration/test_api_live.py
+"""Intergration Tests for fpg api."""
 
 import os
+
 import requests
 from dotenv import load_dotenv
 
@@ -8,25 +9,28 @@ load_dotenv(override=True)
 
 BASE_URL = os.getenv("BASE_URL")
 
+acceptable_status_code = 200
+timeout = 30
+
 def test_rules():
-    """ """
-    r = requests.get(f"{BASE_URL}/rules")
-    assert r.status_code == 200
+    """Test Rules."""
+    r = requests.get(f"{BASE_URL}/rules", timeout=timeout)
+    assert r.status_code == acceptable_status_code
 
 def test_api():
-    """ """
-    r = requests.get(f"{BASE_URL}/api")
-    assert r.status_code == 200
+    """Test Api."""
+    r = requests.get(f"{BASE_URL}/api", timeout=timeout)
+    assert r.status_code == acceptable_status_code
 
 def test_index():
-    """ """
-    r = requests.get(f"{BASE_URL}/")
-    assert r.status_code == 200
+    """Test Index."""
+    r = requests.get(f"{BASE_URL}/", timeout=timeout)
+    assert r.status_code == acceptable_status_code
 
 def test_get_current_round():
-    """ """
-    r = requests.get(f"{BASE_URL}/current_round?player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get current round."""
+    r = requests.get(f"{BASE_URL}/current_round?player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -38,25 +42,26 @@ def test_get_current_round():
 
 
 def test_get_available_choices():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_available_choices?player_id=6&season=2025")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get available choices."""
+    r = requests.get(f"{BASE_URL}/get_available_choices?player_id=6&season=2025", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
     expected_length = 1
     expected_keys = {'TEAM_NAME'}
-    
+
     assert len(data) >= expected_length
-    assert isinstance(data, list), f"Available choices is not an array"
+    assert isinstance(data, list), "Available choices is not an array"
     assert isinstance(data[0], dict)
     assert expected_keys.issubset(data[0].keys())
 
 
 def test_get_choices_inc_method():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_choices?round_id=10&season=2024&inc_method=true")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get choices inc method."""
+    r = requests.get(f"{BASE_URL}/get_choices?round_id=10&season=2024&inc_method=true",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -67,12 +72,13 @@ def test_get_choices_inc_method():
     assert isinstance(data['6'], dict)
     assert isinstance(data, dict)
     assert expected_keys.issubset(data['6'].keys())
-    
+
 
 def test_get_choices_not_inc_method():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_choices?round_id=10&season=2024&inc_method=false")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get choices not inc method."""
+    r = requests.get(f"{BASE_URL}/get_choices?round_id=10&season=2024&inc_method=false",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -84,9 +90,10 @@ def test_get_choices_not_inc_method():
 
 
 def test_get_fixtures():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_fixtures?round_id=10&season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get fixtures."""
+    r = requests.get(f"{BASE_URL}/get_fixtures?round_id=10&season=2024&player_id=6",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
     expected_length = 10
@@ -100,25 +107,25 @@ def test_get_fixtures():
 
 
 def test_get_player_info():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_player_info?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get player info."""
+    r = requests.get(f"{BASE_URL}/get_player_info?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
     expected_keys = { "draw_cnt", "lose_cnt", "round_cnt", "total_points", "win_cnt" }
     expected_length = 1
-    
+
     assert len(data) == expected_length
     assert isinstance(data, list)
     assert isinstance(data[0], dict)
-    assert expected_keys.issubset(data[0].keys())   
+    assert expected_keys.issubset(data[0].keys())
 
 
 def test_get_points():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_points?round_id=10&season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get points."""
+    r = requests.get(f"{BASE_URL}/get_points?round_id=10&season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -133,9 +140,9 @@ def test_get_points():
 
 
 def test_get_previous_choices():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_previous_choices?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get previous choies."""
+    r = requests.get(f"{BASE_URL}/get_previous_choices?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -149,9 +156,9 @@ def test_get_previous_choices():
 
 
 def test_get_previous_points():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_previous_points?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get previous points."""
+    r = requests.get(f"{BASE_URL}/get_previous_points?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -165,9 +172,9 @@ def test_get_previous_points():
 
 
 def test_get_rolling_standings():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_rolling_standings?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get rolling standings."""
+    r = requests.get(f"{BASE_URL}/get_rolling_standings?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -181,9 +188,10 @@ def test_get_rolling_standings():
 
 
 def test_get_round_info():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_round_info?round_id=10&season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get round info."""
+    r = requests.get(f"{BASE_URL}/get_round_info?round_id=10&season=2024&player_id=6",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -196,13 +204,15 @@ def test_get_round_info():
 
 
 def test_get_round_results():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_round_results?round_id=10&season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get round results."""
+    r = requests.get(f"{BASE_URL}/get_round_results?round_id=10&season=2024&player_id=6",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
-    expected_keys = { "AWAY_GOALS", "FIXTURE_ID", "GAME_STATUS", "HOME_GOALS", "ROUND", "SCORE", "WINNER" }
+    expected_keys = { "AWAY_GOALS", "FIXTURE_ID", "GAME_STATUS",
+                      "HOME_GOALS", "ROUND", "SCORE", "WINNER" }
     expected_length = 10
 
     assert len(data) == expected_length
@@ -212,9 +222,9 @@ def test_get_round_results():
 
 
 def test_get_season_overview():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_season_overview?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get season overview."""
+    r = requests.get(f"{BASE_URL}/get_season_overview?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -227,9 +237,9 @@ def test_get_season_overview():
     assert expected_keys.issubset(data[0].keys())
 
 def test_get_standings():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_standings?season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get standings."""
+    r = requests.get(f"{BASE_URL}/get_standings?season=2024&player_id=6", timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -242,9 +252,10 @@ def test_get_standings():
     assert expected_keys.issubset(data[0].keys())
 
 def test_get_username():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_username?player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get username."""
+    r = requests.get(f"{BASE_URL}/get_username?player_id=6",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
@@ -256,14 +267,15 @@ def test_get_username():
     assert expected_keys.issubset(data.keys())
 
 def test_get_weekly_info():
-    """ """
-    r = requests.get(f"{BASE_URL}/get_weekly_info?round_id=10&season=2024&player_id=6")
-    assert r.status_code == 200, f"Unexpected status code: {r.status_code}"
+    """Test get weekly info."""
+    r = requests.get(f"{BASE_URL}/get_weekly_info?round_id=10&season=2024&player_id=6",
+                     timeout=timeout)
+    assert r.status_code == acceptable_status_code, f"Unexpected status code: {r.status_code}"
 
     data = r.json()
 
-    expected_keys = { "away_goals", "away_team", "basic", "derby", "dmm", "Doubled", 
-                      "head_to_head", "home_goals", "home_team", "lonely_points", "pick", 
+    expected_keys = { "away_goals", "away_team", "basic", "derby", "dmm", "Doubled",
+                      "head_to_head", "home_goals", "home_team", "lonely_points", "pick",
                       "player_id", "round", "total", "subtotal", "running_total", 'docked_points'}
     expected_length = 1
 
