@@ -64,12 +64,21 @@ responses:
           dmm:
             type: integer
             example: 0
-          lonely:
+          lonely_points:
             type: integer
             example: 0
           doubled:
             type: boolean
             example: true
           total:
+            type: integer
+            example: 6
+          subtotal:
+            type: integer
+            example: 6
+          running_total:
+            type: integer
+            example: 6
+          docked_points:
             type: integer
             example: 6

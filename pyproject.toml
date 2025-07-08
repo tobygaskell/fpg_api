@@ -15,6 +15,7 @@ dependencies = [
     "pandas>=2.2.3",
     "pymdown-extensions>=10.16",
     "pytest>=8.3.5",
+    "pytest-cov>=6.2.1",
     "sqlalchemy>=2.0.40",
 ]
 

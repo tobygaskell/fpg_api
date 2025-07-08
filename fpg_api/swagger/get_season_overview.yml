@@ -21,11 +21,11 @@ responses:
       items:
         type: object
         properties:
-          PLAYER_ID:
+          player_id:
             type: integer
             description: The player id of the player whose season overview this is.
             example: 6
-          ROUND:
+          round:
             type: integer
             description: The round if for that round.
             example: 10
