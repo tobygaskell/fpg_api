@@ -1,6 +1,6 @@
 """File to store all of the endpoints related to the players FPG Choice."""
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import utils
 from fpg_api.api import rounds
@@ -56,7 +56,8 @@ def make_choice(player, choice, round_id, season=2024):
 
     _, _, cut_off = rounds.get_round_info(round_id, season)
 
-    if cut_off > datetime.now(tz=UTC):
+    cut_off = cut_off.replace(tzinfo=timezone.utc)
+    if cut_off > datetime.now(tz=timezone.utc):
         query = """
                 SELECT COUNT(*) AS CHOICE_EXISTS
                 FROM CHOICES
