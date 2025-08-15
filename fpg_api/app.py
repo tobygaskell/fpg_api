@@ -344,7 +344,7 @@ def init_player():
 
     player_id = players.init_player(email)
 
-    utils.log_call(player_id, "init_player")
+    utils.log_call(int(player_id), "init_player")
 
     return {"player_id": int(player_id)}
 
