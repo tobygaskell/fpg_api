@@ -44,7 +44,7 @@ def get_player_info(player_id, season=2024):
             SELECT SUM(total) AS total_points,
                    SUM(CASE WHEN BASIC_POINTS = 1
                             THEN 1 ELSE 0 END) AS win_cnt,
-                   SUM(CASE WHEN BASIC_POINTS IS NULL
+                   SUM(CASE WHEN BASIC_POINTS = 0
                             THEN 1 ELSE 0 END) AS draw_cnt,
                    SUM(CASE WHEN BASIC_POINTS = -1
                             THEN 1 ELSE 0 END) AS lose_cnt,
